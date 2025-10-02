@@ -11,6 +11,82 @@ const NFLPage = () => {
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [weeks, setWeeks] = useState([]);
 
+  const getTeamLogo = (teamName) => {
+    const teamLogos = {
+      'Arizona Cardinals': 'https://a.espncdn.com/i/teamlogos/nfl/500/ari.png',
+      'Atlanta Falcons': 'https://a.espncdn.com/i/teamlogos/nfl/500/atl.png',
+      'Baltimore Ravens': 'https://a.espncdn.com/i/teamlogos/nfl/500/bal.png',
+      'Buffalo Bills': 'https://a.espncdn.com/i/teamlogos/nfl/500/buf.png',
+      'Carolina Panthers': 'https://a.espncdn.com/i/teamlogos/nfl/500/car.png',
+      'Chicago Bears': 'https://a.espncdn.com/i/teamlogos/nfl/500/chi.png',
+      'Cincinnati Bengals': 'https://a.espncdn.com/i/teamlogos/nfl/500/cin.png',
+      'Cleveland Browns': 'https://a.espncdn.com/i/teamlogos/nfl/500/cle.png',
+      'Dallas Cowboys': 'https://a.espncdn.com/i/teamlogos/nfl/500/dal.png',
+      'Denver Broncos': 'https://a.espncdn.com/i/teamlogos/nfl/500/den.png',
+      'Detroit Lions': 'https://a.espncdn.com/i/teamlogos/nfl/500/det.png',
+      'Green Bay Packers': 'https://a.espncdn.com/i/teamlogos/nfl/500/gb.png',
+      'Houston Texans': 'https://a.espncdn.com/i/teamlogos/nfl/500/hou.png',
+      'Indianapolis Colts': 'https://a.espncdn.com/i/teamlogos/nfl/500/ind.png',
+      'Jacksonville Jaguars': 'https://a.espncdn.com/i/teamlogos/nfl/500/jax.png',
+      'Kansas City Chiefs': 'https://a.espncdn.com/i/teamlogos/nfl/500/kc.png',
+      'Las Vegas Raiders': 'https://a.espncdn.com/i/teamlogos/nfl/500/lv.png',
+      'Los Angeles Chargers': 'https://a.espncdn.com/i/teamlogos/nfl/500/lac.png',
+      'Los Angeles Rams': 'https://a.espncdn.com/i/teamlogos/nfl/500/lar.png',
+      'Miami Dolphins': 'https://a.espncdn.com/i/teamlogos/nfl/500/mia.png',
+      'Minnesota Vikings': 'https://a.espncdn.com/i/teamlogos/nfl/500/min.png',
+      'New England Patriots': 'https://a.espncdn.com/i/teamlogos/nfl/500/ne.png',
+      'New Orleans Saints': 'https://a.espncdn.com/i/teamlogos/nfl/500/no.png',
+      'New York Giants': 'https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png',
+      'New York Jets': 'https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png',
+      'Philadelphia Eagles': 'https://a.espncdn.com/i/teamlogos/nfl/500/phi.png',
+      'Pittsburgh Steelers': 'https://a.espncdn.com/i/teamlogos/nfl/500/pit.png',
+      'San Francisco 49ers': 'https://a.espncdn.com/i/teamlogos/nfl/500/sf.png',
+      'Seattle Seahawks': 'https://a.espncdn.com/i/teamlogos/nfl/500/sea.png',
+      'Tampa Bay Buccaneers': 'https://a.espncdn.com/i/teamlogos/nfl/500/tb.png',
+      'Tennessee Titans': 'https://a.espncdn.com/i/teamlogos/nfl/500/ten.png',
+      'Washington Commanders': 'https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png'
+    };
+    return teamLogos[teamName] || '';
+  };
+
+  const getTeamShortName = (teamName) => {
+    const teamShortNames = {
+      'Arizona Cardinals': 'ARI',
+      'Atlanta Falcons': 'ATL',
+      'Baltimore Ravens': 'BAL',
+      'Buffalo Bills': 'BUF',
+      'Carolina Panthers': 'CAR',
+      'Chicago Bears': 'CHI',
+      'Cincinnati Bengals': 'CIN',
+      'Cleveland Browns': 'CLE',
+      'Dallas Cowboys': 'DAL',
+      'Denver Broncos': 'DEN',
+      'Detroit Lions': 'DET',
+      'Green Bay Packers': 'GB',
+      'Houston Texans': 'HOU',
+      'Indianapolis Colts': 'IND',
+      'Jacksonville Jaguars': 'JAX',
+      'Kansas City Chiefs': 'KC',
+      'Las Vegas Raiders': 'LV',
+      'Los Angeles Chargers': 'LAC',
+      'Los Angeles Rams': 'LAR',
+      'Miami Dolphins': 'MIA',
+      'Minnesota Vikings': 'MIN',
+      'New England Patriots': 'NE',
+      'New Orleans Saints': 'NO',
+      'New York Giants': 'NYG',
+      'New York Jets': 'NYJ',
+      'Philadelphia Eagles': 'PHI',
+      'Pittsburgh Steelers': 'PIT',
+      'San Francisco 49ers': 'SF',
+      'Seattle Seahawks': 'SEA',
+      'Tampa Bay Buccaneers': 'TB',
+      'Tennessee Titans': 'TEN',
+      'Washington Commanders': 'WAS'
+    };
+    return teamShortNames[teamName] || teamName;
+  };
+
   useEffect(() => {
     fetchGames();
   }, []);
@@ -462,169 +538,143 @@ const NFLPage = () => {
                     })}
                   </div>
 
-                  <h3 style={{ color: theme.text, marginBottom: '15px', fontSize: '18px' }}>
-                    💰 Moneyline
-                  </h3>
-                  
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1.5fr 1fr 1.5fr',
-                    gap: '15px',
-                    alignItems: 'center',
-                    padding: '15px',
-                    background: darkMode ? '#0f172a' : '#f8fafc',
-                    borderRadius: '12px',
-                    marginBottom: '10px',
-                    border: `3px solid ${getBorderColor(game.id, 'ml', awayTeam)}`
-                  }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr 1fr', gap: '10px', marginBottom: '20px' }}>
+                    {/* Team Column */}
                     <div>
-                      <div style={{ fontSize: '16px', fontWeight: '700', color: theme.text }}>
-                        {awayTeam}
-                      </div>
-                    </div>
-
-                    <div>
-                      {awayBestML && (
-                        <>
-                          <div style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
-                            {awayBestML.odds > 0 ? '+' : ''}{awayBestML.odds}
-                          </div>
-                          <div style={{ fontSize: '10px', color: theme.textSecondary }}>
-                            {awayBestML.bookmaker}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24' }}>
-                      {awayPredML}%
-                    </div>
-
-                    <div>
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.1"
-                        value={awayPredML || ''}
-                        onChange={(e) => updatePrediction(game.id, `${awayTeam}_ml`, e.target.value)}
-                        style={{
-                          width: '70px',
-                          padding: '6px',
-                          fontSize: '13px',
-                          border: `2px solid ${theme.border}`,
-                          borderRadius: '6px',
-                          background: theme.inputBg,
-                          color: theme.text
-                        }}
-                      />
-                      {awayEV_ML !== null && (
-                        <div style={{
-                          marginTop: '4px',
-                          fontSize: '13px',
-                          fontWeight: '700',
-                          color: awayEV_ML > 0 ? '#16a34a' : '#dc2626'
-                        }}>
-                          {awayEV_ML > 0 ? '+' : ''}{awayEV_ML.toFixed(2)}%
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1.5fr 1fr 1.5fr',
-                    gap: '15px',
-                    alignItems: 'center',
-                    padding: '15px',
-                    background: darkMode ? '#0f172a' : '#f8fafc',
-                    borderRadius: '12px',
-                    marginBottom: '20px',
-                    border: `3px solid ${getBorderColor(game.id, 'ml', homeTeam)}`
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '16px', fontWeight: '700', color: theme.text }}>
-                        {homeTeam}
-                      </div>
-                    </div>
-
-                    <div>
-                      {homeBestML && (
-                        <>
-                          <div style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
-                            {homeBestML.odds > 0 ? '+' : ''}{homeBestML.odds}
-                          </div>
-                          <div style={{ fontSize: '10px', color: theme.textSecondary }}>
-                            {homeBestML.bookmaker}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24' }}>
-                      {homePredML}%
-                    </div>
-
-                    <div>
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.1"
-                        value={homePredML || ''}
-                        onChange={(e) => updatePrediction(game.id, `${homeTeam}_ml`, e.target.value)}
-                        style={{
-                          width: '70px',
-                          padding: '6px',
-                          fontSize: '13px',
-                          border: `2px solid ${theme.border}`,
-                          borderRadius: '6px',
-                          background: theme.inputBg,
-                          color: theme.text
-                        }}
-                      />
-                      {homeEV_ML !== null && (
-                        <div style={{
-                          marginTop: '4px',
-                          fontSize: '13px',
-                          fontWeight: '700',
-                          color: homeEV_ML > 0 ? '#16a34a' : '#dc2626'
-                        }}>
-                          {homeEV_ML > 0 ? '+' : ''}{homeEV_ML.toFixed(2)}%
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {(homeBestSpread || awayBestSpread) && (
-                    <>
-                      <h3 style={{ color: theme.text, marginBottom: '15px', marginTop: '25px', fontSize: '18px' }}>
-                        📊 Spreads
+                      <h3 style={{ color: 'transparent', marginBottom: '10px', fontSize: '16px', userSelect: 'none' }}>
+                        .
                       </h3>
-                      
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Home Team */}
                         <div style={{
-                          padding: '15px',
+                          padding: '12px 10px',
                           background: darkMode ? '#0f172a' : '#f8fafc',
-                          borderRadius: '12px',
-                          border: `3px solid ${getBorderColor(game.id, 'spread', awayTeam)}`
+                          borderRadius: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          minHeight: '88px'
                         }}>
-                          <div style={{ fontSize: '14px', color: theme.text, fontWeight: '700', marginBottom: '8px' }}>
-                            {awayTeam}
+                          <img src={getTeamLogo(homeTeam)} alt={homeTeam} style={{ width: '32px', height: '32px' }} />
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: '700', color: theme.text }}>
+                              {getTeamShortName(homeTeam)}
+                            </div>
+                            {homeBestML && awayBestML && (
+                              <div style={{ fontSize: '10px', color: homeBestML.odds < awayBestML.odds ? '#22c55e' : theme.textSecondary }}>
+                                {homeBestML.odds < awayBestML.odds ? 'FAV' : 'DOG'}
+                              </div>
+                            )}
                           </div>
-                          {awayBestSpread && awaySpreadPoints !== null && (
-                            <>
-                              <div>
-                                <span style={{ fontSize: '15px', fontWeight: '700', color: theme.text }}>
-                                  {awaySpreadPoints > 0 ? '+' : ''}{awaySpreadPoints}
-                                </span>
-                                <span style={{ marginLeft: '8px', fontSize: '14px', color: theme.text }}>
-                                  {awayBestSpread.odds > 0 ? '+' : ''}{awayBestSpread.odds}
-                                </span>
+                        </div>
+                        {/* Away Team */}
+                        <div style={{
+                          padding: '12px 10px',
+                          background: darkMode ? '#0f172a' : '#f8fafc',
+                          borderRadius: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          minHeight: '88px'
+                        }}>
+                          <img src={getTeamLogo(awayTeam)} alt={awayTeam} style={{ width: '32px', height: '32px' }} />
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: '700', color: theme.text }}>
+                              {getTeamShortName(awayTeam)}
+                            </div>
+                            {homeBestML && awayBestML && (
+                              <div style={{ fontSize: '10px', color: awayBestML.odds < homeBestML.odds ? '#22c55e' : theme.textSecondary }}>
+                                {awayBestML.odds < homeBestML.odds ? 'FAV' : 'DOG'}
                               </div>
-                              <div style={{ fontSize: '10px', color: theme.textSecondary, marginTop: '4px' }}>
-                                {awayBestSpread.bookmaker}
-                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Spread Column */}
+                    <div>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
+                        📊 Spread
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Home Spread */}
+                        {homeBestSpread && homeSpreadPoints !== null && (
+                          <div style={{
+                            padding: '12px',
+                            background: darkMode ? '#0f172a' : '#f8fafc',
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'spread', homeTeam)}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                          }}>
+                            <div style={{ marginBottom: '6px' }}>
+                              <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                {homeSpreadPoints > 0 ? '+' : ''}{homeSpreadPoints}
+                              </span>
+                              <span style={{ marginLeft: '6px', fontSize: '13px', color: theme.text }}>
+                                {homeBestSpread.odds > 0 ? '+' : ''}{homeBestSpread.odds}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
+                              {homeBestSpread.bookmaker}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                value={homePredSpread || ''}
+                                onChange={(e) => updatePrediction(game.id, `${homeTeam}_spread`, e.target.value)}
+                                style={{
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
+                                  border: `2px solid ${theme.border}`,
+                                  borderRadius: '6px',
+                                  background: theme.inputBg,
+                                  color: theme.text
+                                }}
+                              />
+                              {homeEV_Spread !== null && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  fontWeight: '700',
+                                  color: homeEV_Spread > 0 ? '#16a34a' : '#dc2626'
+                                }}>
+                                  {homeEV_Spread > 0 ? '+' : ''}{homeEV_Spread.toFixed(2)}%
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Away Spread */}
+                        {awayBestSpread && awaySpreadPoints !== null && (
+                          <div style={{
+                            padding: '12px',
+                            background: darkMode ? '#0f172a' : '#f8fafc',
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'spread', awayTeam)}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                          }}>
+                            <div style={{ marginBottom: '6px' }}>
+                              <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                {awaySpreadPoints > 0 ? '+' : ''}{awaySpreadPoints}
+                              </span>
+                              <span style={{ marginLeft: '6px', fontSize: '13px', color: theme.text }}>
+                                {awayBestSpread.odds > 0 ? '+' : ''}{awayBestSpread.odds}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
+                              {awayBestSpread.bookmaker}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <input
                                 type="number"
                                 min="0"
@@ -633,140 +683,256 @@ const NFLPage = () => {
                                 value={awayPredSpread || ''}
                                 onChange={(e) => updatePrediction(game.id, `${awayTeam}_spread`, e.target.value)}
                                 style={{
-                                  width: '70px',
-                                  padding: '6px',
-                                  fontSize: '12px',
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
                                   border: `2px solid ${theme.border}`,
                                   borderRadius: '6px',
                                   background: theme.inputBg,
-                                  color: theme.text,
-                                  marginTop: '8px'
+                                  color: theme.text
                                 }}
                               />
-                              {homeEV_Spread !== null && (
-                                <div style={{
-                                  marginTop: '4px',
-                                  fontSize: '13px',
+                              {awayEV_Spread !== null && (
+                                <span style={{
+                                  fontSize: '11px',
                                   fontWeight: '700',
-                                  color: homeEV_Spread > 0 ? '#16a34a' : '#dc2626'
+                                  color: awayEV_Spread > 0 ? '#16a34a' : '#dc2626'
                                 }}>
-                                  {homeEV_Spread > 0 ? '+' : ''}{homeEV_Spread.toFixed(2)}%
-                                </div>
+                                  {awayEV_Spread > 0 ? '+' : ''}{awayEV_Spread.toFixed(2)}%
+                                </span>
                               )}
-                            </>
-                          )}
-                        </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </>
-                  )}
+                    </div>
 
-                  {(overBest || underBest) && (
-                    <>
-                      <h3 style={{ color: theme.text, marginBottom: '15px', marginTop: '25px', fontSize: '18px' }}>
+                    {/* Moneyline Column */}
+                    <div>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
+                        💰 Moneyline
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Home Moneyline */}
+                        {homeBestML && (
+                          <div style={{
+                            padding: '12px',
+                            background: darkMode ? '#0f172a' : '#f8fafc',
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'ml', homeTeam)}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                          }}>
+                            <div style={{ marginBottom: '6px' }}>
+                              <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                {homeBestML.odds > 0 ? '+' : ''}{homeBestML.odds}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
+                              {homeBestML.bookmaker}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                value={homePredML || ''}
+                                onChange={(e) => updatePrediction(game.id, `${homeTeam}_ml`, e.target.value)}
+                                style={{
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
+                                  border: `2px solid ${theme.border}`,
+                                  borderRadius: '6px',
+                                  background: theme.inputBg,
+                                  color: theme.text
+                                }}
+                              />
+                              {homeEV_ML !== null && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  fontWeight: '700',
+                                  color: homeEV_ML > 0 ? '#16a34a' : '#dc2626'
+                                }}>
+                                  {homeEV_ML > 0 ? '+' : ''}{homeEV_ML.toFixed(2)}%
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Away Moneyline */}
+                        {awayBestML && (
+                          <div style={{
+                            padding: '12px',
+                            background: darkMode ? '#0f172a' : '#f8fafc',
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'ml', awayTeam)}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                          }}>
+                            <div style={{ marginBottom: '6px' }}>
+                              <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                {awayBestML.odds > 0 ? '+' : ''}{awayBestML.odds}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
+                              {awayBestML.bookmaker}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                value={awayPredML || ''}
+                                onChange={(e) => updatePrediction(game.id, `${awayTeam}_ml`, e.target.value)}
+                                style={{
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
+                                  border: `2px solid ${theme.border}`,
+                                  borderRadius: '6px',
+                                  background: theme.inputBg,
+                                  color: theme.text
+                                }}
+                              />
+                              {awayEV_ML !== null && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  fontWeight: '700',
+                                  color: awayEV_ML > 0 ? '#16a34a' : '#dc2626'
+                                }}>
+                                  {awayEV_ML > 0 ? '+' : ''}{awayEV_ML.toFixed(2)}%
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Totals Column */}
+                    <div>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
                         🎯 Totals
                       </h3>
-                      
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {/* Over */}
                         {overBest && (
                           <div style={{
-                            padding: '15px',
+                            padding: '12px',
                             background: darkMode ? '#0f172a' : '#f8fafc',
-                            borderRadius: '12px',
-                            border: `3px solid ${getBorderColor(game.id, 'total', 'Over')}`
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'total', 'Over')}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
                           }}>
-                            <div style={{ fontSize: '14px', color: theme.text, fontWeight: '700', marginBottom: '8px' }}>
-                              Over {overBest.points}
-                            </div>
-                            <div>
+                            <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                O {overBest.points}
+                              </span>
+                              <span style={{ marginLeft: '6px', fontSize: '13px', color: theme.text }}>
                                 {overBest.odds > 0 ? '+' : ''}{overBest.odds}
                               </span>
                             </div>
-                            <div style={{ fontSize: '10px', color: theme.textSecondary, marginTop: '4px' }}>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
                               {overBest.bookmaker}
                             </div>
-                            <input
-                              type="number"
-                              min="0"
-                              max="100"
-                              step="0.1"
-                              value={overPred || ''}
-                              onChange={(e) => updatePrediction(game.id, 'over', e.target.value)}
-                              style={{
-                                width: '70px',
-                                padding: '6px',
-                                fontSize: '12px',
-                                border: `2px solid ${theme.border}`,
-                                borderRadius: '6px',
-                                background: theme.inputBg,
-                                color: theme.text,
-                                marginTop: '8px'
-                              }}
-                            />
-                            {overEV !== null && (
-                              <div style={{
-                                marginTop: '4px',
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                color: overEV > 0 ? '#16a34a' : '#dc2626'
-                              }}>
-                                {overEV > 0 ? '+' : ''}{overEV.toFixed(2)}%
-                              </div>
-                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                value={overPred || ''}
+                                onChange={(e) => updatePrediction(game.id, 'over', e.target.value)}
+                                style={{
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
+                                  border: `2px solid ${theme.border}`,
+                                  borderRadius: '6px',
+                                  background: theme.inputBg,
+                                  color: theme.text
+                                }}
+                              />
+                              {overEV !== null && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  fontWeight: '700',
+                                  color: overEV > 0 ? '#16a34a' : '#dc2626'
+                                }}>
+                                  {overEV > 0 ? '+' : ''}{overEV.toFixed(2)}%
+                                </span>
+                              )}
+                            </div>
                           </div>
                         )}
-                        
+
+                        {/* Under */}
                         {underBest && (
                           <div style={{
-                            padding: '15px',
+                            padding: '12px',
                             background: darkMode ? '#0f172a' : '#f8fafc',
-                            borderRadius: '12px',
-                            border: `3px solid ${getBorderColor(game.id, 'total', 'Under')}`
+                            borderRadius: '10px',
+                            border: `3px solid ${getBorderColor(game.id, 'total', 'Under')}`,
+                            minHeight: '88px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
                           }}>
-                            <div style={{ fontSize: '14px', color: theme.text, fontWeight: '700', marginBottom: '8px' }}>
-                              Under {underBest.points}
-                            </div>
-                            <div>
+                            <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
+                                U {underBest.points}
+                              </span>
+                              <span style={{ marginLeft: '6px', fontSize: '13px', color: theme.text }}>
                                 {underBest.odds > 0 ? '+' : ''}{underBest.odds}
                               </span>
                             </div>
-                            <div style={{ fontSize: '10px', color: theme.textSecondary, marginTop: '4px' }}>
+                            <div style={{ fontSize: '9px', color: theme.textSecondary, marginBottom: '6px' }}>
                               {underBest.bookmaker}
                             </div>
-                            <input
-                              type="number"
-                              min="0"
-                              max="100"
-                              step="0.1"
-                              value={underPred || ''}
-                              onChange={(e) => updatePrediction(game.id, 'under', e.target.value)}
-                              style={{
-                                width: '70px',
-                                padding: '6px',
-                                fontSize: '12px',
-                                border: `2px solid ${theme.border}`,
-                                borderRadius: '6px',
-                                background: theme.inputBg,
-                                color: theme.text,
-                                marginTop: '8px'
-                              }}
-                            />
-                            {underEV !== null && (
-                              <div style={{
-                                marginTop: '4px',
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                color: underEV > 0 ? '#16a34a' : '#dc2626'
-                              }}>
-                                {underEV > 0 ? '+' : ''}{underEV.toFixed(2)}%
-                              </div>
-                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                value={underPred || ''}
+                                onChange={(e) => updatePrediction(game.id, 'under', e.target.value)}
+                                style={{
+                                  width: '55px',
+                                  padding: '4px',
+                                  fontSize: '11px',
+                                  border: `2px solid ${theme.border}`,
+                                  borderRadius: '6px',
+                                  background: theme.inputBg,
+                                  color: theme.text
+                                }}
+                              />
+                              {underEV !== null && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  fontWeight: '700',
+                                  color: underEV > 0 ? '#16a34a' : '#dc2626'
+                                }}>
+                                  {underEV > 0 ? '+' : ''}{underEV.toFixed(2)}%
+                                </span>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>
-                    </>
-                  )}
+                    </div>
+                  </div>
                 </div>
               );
             })}
