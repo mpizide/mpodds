@@ -1,6 +1,6 @@
 """
-Generate ML predictions for upcoming NFL games
-Outputs predictions that can be loaded into the React app
+Generate comprehensive ML predictions for upcoming NFL games
+Uses all three models: Win Probability, Spread, and Totals
 """
 
 import pandas as pd
@@ -10,16 +10,16 @@ import nfl_data_py as nfl
 from datetime import datetime, timedelta
 import json
 
-print("Loading trained model...")
-model = joblib.load('ml_model/nfl_prediction_model.pkl')
+print("Loading trained models...")
+win_model = joblib.load('ml_model/nfl_prediction_model.pkl')
+spread_model = joblib.load('ml_model/nfl_spread_model.pkl')
+totals_model = joblib.load('ml_model/nfl_totals_model.pkl')
 feature_columns = joblib.load('ml_model/feature_columns.pkl')
 
 print("Fetching current season data...")
 current_year = 2025
-# Also get 2024 data for team stats calculation
 games_2024 = nfl.import_schedules([2024])
 games_2025 = nfl.import_schedules([2025])
-# Combine for stats calculation
 games_all = pd.concat([games_2024, games_2025])
 
 # Calculate current team stats
@@ -48,7 +48,6 @@ for team in teams:
     ]).sort_values('gameday')
 
     if len(all_games) > 0:
-        # Last 5 games rolling average
         recent_games = all_games.tail(5)
         team_stats[team] = {
             'rolling_ppg': recent_games['points_for'].mean(),
@@ -60,8 +59,8 @@ for team in teams:
 print("\nGenerating predictions for upcoming games...")
 upcoming_games = games_2025[
     (games_2025['gameday'].notna()) &
-    (games_2025['home_score'].isna()) &  # Not yet played
-    (games_2025['week'] >= 6)  # Week 6 and beyond
+    (games_2025['home_score'].isna()) &
+    (games_2025['week'] >= 6)
 ].copy()
 
 upcoming_games['gameday'] = pd.to_datetime(upcoming_games['gameday'])
@@ -72,7 +71,6 @@ for idx, game in upcoming_games.iterrows():
     home_team = game['home_team']
     away_team = game['away_team']
 
-    # Skip if we don't have stats for both teams
     if home_team not in team_stats or away_team not in team_stats:
         continue
 
@@ -96,45 +94,64 @@ for idx, game in upcoming_games.iterrows():
     }
 
     X = pd.DataFrame([features])[feature_columns]
-    prob = model.predict_proba(X)[0, 1]  # Probability home team wins
+
+    # Get all three predictions
+    win_prob = win_model.predict_proba(X)[0, 1]  # Home team win probability
+    predicted_spread = spread_model.predict(X)[0]  # Predicted point differential
+    predicted_total = totals_model.predict(X)[0]  # Predicted total points
+
+    # Convert spread prediction to cover probabilities
+    # Assume normal distribution around predicted spread
+    # For now, use simple logic: if predicted > spread, home covers
 
     predictions.append({
         'game_id': game['game_id'],
         'gameday': game['gameday'].strftime('%Y-%m-%d'),
+        'week': int(game['week']),
         'home_team': home_team,
         'away_team': away_team,
-        'home_win_prob': round(prob * 100, 1),
-        'away_win_prob': round((1 - prob) * 100, 1),
-        'week': int(game['week'])
+
+        # Win probabilities
+        'home_win_prob': round(win_prob * 100, 1),
+        'away_win_prob': round((1 - win_prob) * 100, 1),
+
+        # Spread predictions
+        'predicted_spread': round(predicted_spread, 1),
+        'home_spread_prob': round(win_prob * 100, 1),  # For now, use win prob
+        'away_spread_prob': round((1 - win_prob) * 100, 1),
+
+        # Totals predictions
+        'predicted_total': round(predicted_total, 1),
+        'over_prob': 50.0,  # Need more sophisticated model for this
+        'under_prob': 50.0
     })
 
 predictions_df = pd.DataFrame(predictions)
 
 # Save predictions
-predictions_df.to_csv('ml_model/data/upcoming_predictions.csv', index=False)
+predictions_df.to_csv('ml_model/data/upcoming_predictions_all.csv', index=False)
 
 # Also save as JSON for easy loading in React
 predictions_json = predictions_df.to_dict('records')
-with open('ml_model/data/upcoming_predictions.json', 'w') as f:
+with open('ml_model/data/upcoming_predictions_all.json', 'w') as f:
     json.dump(predictions_json, f, indent=2)
 
 print("\n" + "="*60)
-print("PREDICTIONS GENERATED!")
+print("ALL PREDICTIONS GENERATED!")
 print("="*60)
 print(f"\nFound {len(predictions)} upcoming games")
-print("\nPredictions:")
+print("\nSample predictions (Week 6):")
 print("="*60)
 
-for pred in predictions:
-    print(f"\n{pred['home_team']} vs {pred['away_team']}")
-    print(f"  Date: {pred['gameday']}")
-    print(f"  Prediction: {pred['home_team']} {pred['home_win_prob']}% | {pred['away_team']} {pred['away_win_prob']}%")
-    favorite = pred['home_team'] if pred['home_win_prob'] > 50 else pred['away_team']
-    confidence = max(pred['home_win_prob'], pred['away_win_prob'])
-    print(f"  Pick: {favorite} ({confidence}% confidence)")
+week6 = predictions_df[predictions_df['week'] == 6].head(5)
+for _, pred in week6.iterrows():
+    print(f"\n{pred['home_team']} vs {pred['away_team']} - {pred['gameday']}")
+    print(f"  Win: {pred['home_team']} {pred['home_win_prob']}% | {pred['away_team']} {pred['away_win_prob']}%")
+    print(f"  Spread: {pred['predicted_spread']:+.1f} (Home perspective)")
+    print(f"  Total: {pred['predicted_total']:.1f} points")
 
 print("\n" + "="*60)
 print("Files saved:")
-print("  - ml_model/data/upcoming_predictions.csv")
-print("  - ml_model/data/upcoming_predictions.json")
-print("\nNext: Load predictions in your React app to auto-fill probabilities!")
+print("  - ml_model/data/upcoming_predictions_all.csv")
+print("  - ml_model/data/upcoming_predictions_all.json")
+print("\nNext: Copy to React app and update mlPredictions.js to use all three models!")

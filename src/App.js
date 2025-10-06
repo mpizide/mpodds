@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import NFLPage from './pages/NFLPage';
+import PlayerPropsPage from './pages/PlayerPropsPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/nfl" element={<NFLPage />} />
+          <Route path="/nfl/props/:eventId" element={<PlayerPropsPage />} />
         </Routes>
       </div>
     </Router>

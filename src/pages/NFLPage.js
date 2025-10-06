@@ -1,15 +1,43 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getNFLOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
+import { loadMLPredictions } from '../utils/mlPredictions';
 
 const NFLPage = () => {
+  const navigate = useNavigate();
   const [allGames, setAllGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [predictions, setPredictions] = useState({});
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [weeks, setWeeks] = useState([]);
+  const [selectedBookmakers, setSelectedBookmakers] = useState(() => {
+    // Load from localStorage or default to all
+    const saved = localStorage.getItem('selectedBookmakers');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [availableBookmakers, setAvailableBookmakers] = useState([]);
+  const [showBookmakerDropdown, setShowBookmakerDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowBookmakerDropdown(false);
+      }
+    };
+
+    if (showBookmakerDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showBookmakerDropdown]);
 
   const getTeamLogo = (teamName) => {
     const teamLogos = {
@@ -130,54 +158,73 @@ const NFLPage = () => {
         }) || weekNumbers[0];
         setSelectedWeek(currentWeek);
       }
-      
+
+      // Extract all unique bookmakers from games
+      const bookmakerSet = new Set();
+      data.forEach(game => {
+        game.bookmakers?.forEach(book => {
+          bookmakerSet.add(book.title);
+        });
+      });
+      const allBookmakers = Array.from(bookmakerSet).sort();
+      setAvailableBookmakers(allBookmakers);
+
+      // Try to load ML predictions first
+      const mlPredictions = loadMLPredictions(data);
+
       const initialPredictions = {};
       data.forEach(game => {
-        const homeBest = findBestOdds(game.bookmakers, 'h2h', game.home_team);
-        const awayBest = findBestOdds(game.bookmakers, 'h2h', game.away_team);
-        
-        initialPredictions[game.id] = {};
-        
-        if (homeBest && awayBest) {
-          const homeImplied = americanToImplied(homeBest.odds);
-          const awayImplied = americanToImplied(awayBest.odds);
-          const total = homeImplied + awayImplied;
-          
-          initialPredictions[game.id][`${game.home_team}_ml`] = ((homeImplied / total) * 100).toFixed(1);
-          initialPredictions[game.id][`${game.away_team}_ml`] = ((awayImplied / total) * 100).toFixed(1);
-        }
-        
-        const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', game.home_team);
-        const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', game.away_team);
-        
-        if (homeBestSpread && awayBestSpread) {
-          const homeSpreadImplied = americanToImplied(homeBestSpread.odds);
-          const awaySpreadImplied = americanToImplied(awayBestSpread.odds);
-          const spreadTotal = homeSpreadImplied + awaySpreadImplied;
-          
-          initialPredictions[game.id][`${game.home_team}_spread`] = ((homeSpreadImplied / spreadTotal) * 100).toFixed(1);
-          initialPredictions[game.id][`${game.away_team}_spread`] = ((awaySpreadImplied / spreadTotal) * 100).toFixed(1);
+        // Use ML predictions if available, otherwise fall back to implied odds
+        if (mlPredictions[game.id]) {
+          initialPredictions[game.id] = mlPredictions[game.id];
         } else {
-          initialPredictions[game.id][`${game.home_team}_spread`] = '50.0';
-          initialPredictions[game.id][`${game.away_team}_spread`] = '50.0';
-        }
-        
-        const overBest = findBestTotals(game.bookmakers, 'Over');
-        const underBest = findBestTotals(game.bookmakers, 'Under');
-        
-        if (overBest && underBest) {
-          const overImplied = americanToImplied(overBest.odds);
-          const underImplied = americanToImplied(underBest.odds);
-          const totalsTotal = overImplied + underImplied;
-          
-          initialPredictions[game.id]['over'] = ((overImplied / totalsTotal) * 100).toFixed(1);
-          initialPredictions[game.id]['under'] = ((underImplied / totalsTotal) * 100).toFixed(1);
-        } else {
-          initialPredictions[game.id]['over'] = '50.0';
-          initialPredictions[game.id]['under'] = '50.0';
+          // Fallback to implied odds calculation
+          const homeBest = findBestOdds(game.bookmakers, 'h2h', game.home_team);
+          const awayBest = findBestOdds(game.bookmakers, 'h2h', game.away_team);
+
+          initialPredictions[game.id] = {};
+
+          if (homeBest && awayBest) {
+            const homeImplied = americanToImplied(homeBest.odds);
+            const awayImplied = americanToImplied(awayBest.odds);
+            const total = homeImplied + awayImplied;
+
+            initialPredictions[game.id][`${game.home_team}_ml`] = ((homeImplied / total) * 100).toFixed(1);
+            initialPredictions[game.id][`${game.away_team}_ml`] = ((awayImplied / total) * 100).toFixed(1);
+          }
+
+          const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', game.home_team);
+          const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', game.away_team);
+
+          if (homeBestSpread && awayBestSpread) {
+            const homeSpreadImplied = americanToImplied(homeBestSpread.odds);
+            const awaySpreadImplied = americanToImplied(awayBestSpread.odds);
+            const spreadTotal = homeSpreadImplied + awaySpreadImplied;
+
+            initialPredictions[game.id][`${game.home_team}_spread`] = ((homeSpreadImplied / spreadTotal) * 100).toFixed(1);
+            initialPredictions[game.id][`${game.away_team}_spread`] = ((awaySpreadImplied / spreadTotal) * 100).toFixed(1);
+          } else {
+            initialPredictions[game.id][`${game.home_team}_spread`] = '50.0';
+            initialPredictions[game.id][`${game.away_team}_spread`] = '50.0';
+          }
+
+          const overBest = findBestTotals(game.bookmakers, 'Over');
+          const underBest = findBestTotals(game.bookmakers, 'Under');
+
+          if (overBest && underBest) {
+            const overImplied = americanToImplied(overBest.odds);
+            const underImplied = americanToImplied(underBest.odds);
+            const totalsTotal = overImplied + underImplied;
+
+            initialPredictions[game.id]['over'] = ((overImplied / totalsTotal) * 100).toFixed(1);
+            initialPredictions[game.id]['under'] = ((underImplied / totalsTotal) * 100).toFixed(1);
+          } else {
+            initialPredictions[game.id]['over'] = '50.0';
+            initialPredictions[game.id]['under'] = '50.0';
+          }
         }
       });
-      
+
       setPredictions(initialPredictions);
       setError(null);
     } catch (err) {
@@ -515,6 +562,154 @@ const NFLPage = () => {
           ))}
         </div>
 
+        {/* Bookmaker Filter Dropdown */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          marginBottom: '30px',
+          position: 'relative'
+        }}>
+          <label style={{ fontSize: '14px', color: theme.text, fontWeight: '600' }}>
+            📚 Sportsbooks:
+          </label>
+          <div ref={dropdownRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowBookmakerDropdown(!showBookmakerDropdown)}
+              style={{
+                padding: '8px 12px',
+                background: theme.cardBg,
+                color: theme.text,
+                border: `2px solid ${theme.border}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: '600',
+                minWidth: '200px',
+                textAlign: 'left',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <span>
+                {selectedBookmakers.length === 0
+                  ? 'All Sportsbooks'
+                  : `${selectedBookmakers.length} selected`}
+              </span>
+              <span>{showBookmakerDropdown ? '▲' : '▼'}</span>
+            </button>
+
+            {showBookmakerDropdown && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                marginTop: '4px',
+                background: theme.cardBg,
+                border: `2px solid ${theme.border}`,
+                borderRadius: '8px',
+                padding: '8px',
+                zIndex: 1000,
+                minWidth: '250px',
+                maxHeight: '300px',
+                overflowY: 'auto',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '8px',
+                  paddingBottom: '8px',
+                  borderBottom: `1px solid ${theme.border}`
+                }}>
+                  <span style={{ fontSize: '12px', color: theme.textSecondary, fontWeight: '600' }}>
+                    {selectedBookmakers.length} of {availableBookmakers.length} selected
+                  </span>
+                  {selectedBookmakers.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setSelectedBookmakers([]);
+                        localStorage.removeItem('selectedBookmakers');
+                      }}
+                      style={{
+                        padding: '4px 8px',
+                        background: '#ef4444',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '11px'
+                      }}
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                {availableBookmakers.map(book => {
+                  const isSelected = selectedBookmakers.includes(book);
+                  return (
+                    <label
+                      key={book}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '6px 8px',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                        fontSize: '13px',
+                        color: theme.text,
+                        background: isSelected ? (darkMode ? '#334155' : '#f1f5f9') : 'transparent'
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => {
+                          const updated = isSelected
+                            ? selectedBookmakers.filter(b => b !== book)
+                            : [...selectedBookmakers, book];
+                          setSelectedBookmakers(updated);
+                          localStorage.setItem('selectedBookmakers', JSON.stringify(updated));
+                        }}
+                        style={{
+                          marginRight: '8px',
+                          cursor: 'pointer'
+                        }}
+                      />
+                      {book}
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          {selectedBookmakers.length > 0 && !showBookmakerDropdown && (
+            <div style={{
+              fontSize: '12px',
+              color: theme.textSecondary,
+              display: 'flex',
+              gap: '6px',
+              flexWrap: 'wrap'
+            }}>
+              {selectedBookmakers.map(book => (
+                <span
+                  key={book}
+                  style={{
+                    background: darkMode ? '#334155' : '#e2e8f0',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '11px'
+                  }}
+                >
+                  {book}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
         {games.length === 0 ? (
           <div style={{
             background: theme.cardBg,
@@ -539,15 +734,15 @@ const NFLPage = () => {
               const homeTeam = game.home_team;
               const awayTeam = game.away_team;
               
-              const homeBestML = findBestOdds(game.bookmakers, 'h2h', homeTeam);
-              const awayBestML = findBestOdds(game.bookmakers, 'h2h', awayTeam);
+              const homeBestML = findBestOdds(game.bookmakers, 'h2h', homeTeam, selectedBookmakers);
+              const awayBestML = findBestOdds(game.bookmakers, 'h2h', awayTeam, selectedBookmakers);
               const homePredML = predictions[game.id]?.[`${homeTeam}_ml`];
               const awayPredML = predictions[game.id]?.[`${awayTeam}_ml`];
               const homeEV_ML = homePredML && homeBestML ? calculateEV(homePredML, homeBestML.odds) : null;
               const awayEV_ML = awayPredML && awayBestML ? calculateEV(awayPredML, awayBestML.odds) : null;
               
-              const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam);
-              const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam);
+              const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam, selectedBookmakers);
+              const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam, selectedBookmakers);
               let homeSpreadPoints = null;
               let awaySpreadPoints = null;
               game.bookmakers.forEach(book => {
@@ -564,8 +759,8 @@ const NFLPage = () => {
               const homeEV_Spread = homePredSpread && homeBestSpread ? calculateEV(homePredSpread, homeBestSpread.odds) : null;
               const awayEV_Spread = awayPredSpread && awayBestSpread ? calculateEV(awayPredSpread, awayBestSpread.odds) : null;
               
-              const overBest = findBestTotals(game.bookmakers, 'Over');
-              const underBest = findBestTotals(game.bookmakers, 'Under');
+              const overBest = findBestTotals(game.bookmakers, 'Over', selectedBookmakers);
+              const underBest = findBestTotals(game.bookmakers, 'Under', selectedBookmakers);
               const overPred = predictions[game.id]?.['over'];
               const underPred = predictions[game.id]?.['under'];
               const overEV = overPred && overBest ? calculateEV(overPred, overBest.odds) : null;
@@ -583,19 +778,43 @@ const NFLPage = () => {
                     border: `1px solid ${theme.border}`
                   }}
                 >
-                  <div style={{ 
-                    fontSize: '14px', 
-                    color: theme.textSecondary,
-                    marginBottom: '20px',
-                    fontWeight: '600'
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '20px'
                   }}>
-                    {new Date(game.commence_time).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit'
-                    })}
+                    <div style={{
+                      fontSize: '14px',
+                      color: theme.textSecondary,
+                      fontWeight: '600'
+                    }}>
+                      {new Date(game.commence_time).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                    <button
+                      onClick={() => navigate(`/nfl/props/${game.id}`)}
+                      style={{
+                        padding: '8px 16px',
+                        background: '#3b82f6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        transition: 'background 0.2s'
+                      }}
+                      onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                      onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+                    >
+                      📊 Player Props
+                    </button>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr 1fr', gap: '10px', marginBottom: '20px' }}>
