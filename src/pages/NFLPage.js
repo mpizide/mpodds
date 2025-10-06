@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getNFLOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
 
@@ -87,31 +87,33 @@ const NFLPage = () => {
     return teamShortNames[teamName] || teamName;
   };
 
-  useEffect(() => {
-    fetchGames();
-  }, []);
-
   const groupGamesByWeek = (games) => {
-    const NFL_START_DATE = new Date('2024-09-05');
+    // 2025 NFL Season starts September 4, 2025 (Week 1)
+    const NFL_START_DATE = new Date('2025-09-04T00:00:00');
     const WEEK_DURATION = 7 * 24 * 60 * 60 * 1000;
-    
+
     const gamesByWeek = {};
-    
+
     games.forEach(game => {
       const gameDate = new Date(game.commence_time);
+
+      // Calculate weeks since season start
       const weeksSinceStart = Math.floor((gameDate - NFL_START_DATE) / WEEK_DURATION);
       const weekNumber = weeksSinceStart + 1;
-      
-      if (!gamesByWeek[weekNumber]) {
-        gamesByWeek[weekNumber] = [];
+
+      // Ensure week numbers are reasonable (1-22 for regular season + playoffs)
+      if (weekNumber > 0 && weekNumber <= 22) {
+        if (!gamesByWeek[weekNumber]) {
+          gamesByWeek[weekNumber] = [];
+        }
+        gamesByWeek[weekNumber].push(game);
       }
-      gamesByWeek[weekNumber].push(game);
     });
-    
+
     return gamesByWeek;
   };
 
-  const fetchGames = async () => {
+  const fetchGames = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getNFLOdds();
@@ -184,7 +186,11 @@ const NFLPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedWeek]);
+
+  useEffect(() => {
+    fetchGames();
+  }, [fetchGames]);
 
   const updatePrediction = (gameId, key, probability) => {
     setPredictions(prev => ({
@@ -268,29 +274,69 @@ const NFLPage = () => {
 
   const getBorderColor = (gameId, type, team) => {
     const rankedBets = getAllRankedBets();
-    
+    const games = getFilteredGames();
+    const totalGames = games.length;
+
     const topBets = [];
-    const seenGameTypes = new Set();
-    
+    const seenGames = new Set(); // Track which games already have a bet highlighted
+    const seenGameBetTypes = new Map(); // Track game + bet type combinations
+
     for (const bet of rankedBets) {
-      const key = `${bet.gameId}-${bet.type}`;
-      if (!seenGameTypes.has(key)) {
-        seenGameTypes.add(key);
-        topBets.push(bet);
-        if (topBets.length === 9) break;
+      const gameKey = bet.gameId;
+
+      // Skip if this game already has a spread or moneyline bet highlighted
+      if (bet.type === 'spread' || bet.type === 'ml') {
+        if (seenGames.has(gameKey)) {
+          continue; // Skip this bet, game already has a spread/ml highlighted
+        }
       }
+
+      // For totals, only allow one per game (either over or under, not both)
+      if (bet.type === 'total') {
+        const totalKey = `${bet.gameId}-total`;
+        if (seenGameBetTypes.has(totalKey)) {
+          continue; // Skip, this game already has a total bet
+        }
+        seenGameBetTypes.set(totalKey, true);
+      }
+
+      // Add this bet to the list
+      topBets.push(bet);
+
+      // Mark this game as having a spread/ml bet
+      if (bet.type === 'spread' || bet.type === 'ml') {
+        seenGames.add(gameKey);
+      }
+
+      if (topBets.length === 9) break;
     }
-    
+
     const position = topBets.findIndex(
       bet => bet.gameId === gameId && bet.type === type && bet.team === team
     );
-    
+
     if (position === -1) return 'transparent';
-    
+
+    // If 2 or fewer games, only show purple for #1
+    if (totalGames <= 2) {
+      if (position === 0) return '#a855f7';
+      return 'transparent';
+    }
+
+    // Otherwise, show all colored borders
+    if (position === 0) return '#a855f7'; // Purple for #1 pick
     if (position < 3) return '#22c55e';
     if (position < 6) return '#fbbf24';
     if (position < 9) return '#ef4444';
     return 'transparent';
+  };
+
+  const isTopPickOfWeek = (gameId, type, team) => {
+    const rankedBets = getAllRankedBets();
+    if (rankedBets.length === 0) return false;
+
+    const topBet = rankedBets[0];
+    return topBet.gameId === gameId && topBet.type === type && topBet.team === team;
   };
 
   const theme = {
@@ -372,12 +418,26 @@ const NFLPage = () => {
           </h1>
           
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ 
-              fontSize: '12px', 
+            <div style={{
+              fontSize: '12px',
               color: theme.textSecondary,
               display: 'flex',
-              gap: '15px'
+              gap: '15px',
+              alignItems: 'center'
             }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  background: '#a855f7',
+                  color: 'white',
+                  fontSize: '10px'
+                }}>★</span> Pick of Week
+              </span>
               <span><span style={{color: '#22c55e'}}>●</span> Top 3</span>
               <span><span style={{color: '#fbbf24'}}>●</span> 4-6</span>
               <span><span style={{color: '#ef4444'}}>●</span> 7-9</span>
@@ -607,8 +667,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'spread', homeTeam) && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 {homeSpreadPoints > 0 ? '+' : ''}{homeSpreadPoints}
@@ -661,8 +742,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'spread', awayTeam) && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 {awaySpreadPoints > 0 ? '+' : ''}{awaySpreadPoints}
@@ -723,8 +825,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'ml', homeTeam) && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 {homeBestML.odds > 0 ? '+' : ''}{homeBestML.odds}
@@ -774,8 +897,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'ml', awayTeam) && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 {awayBestML.odds > 0 ? '+' : ''}{awayBestML.odds}
@@ -833,8 +977,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'total', 'Over') && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 O {overBest.points}
@@ -887,8 +1052,29 @@ const NFLPage = () => {
                             minHeight: '88px',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative'
                           }}>
+                            {isTopPickOfWeek(game.id, 'total', 'Under') && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                background: '#a855f7',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
+                              }}>
+                                ★
+                              </div>
+                            )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
                                 U {underBest.points}
