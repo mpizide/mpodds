@@ -601,8 +601,8 @@ const NFLPage = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr 1fr', gap: '10px', marginBottom: '20px' }}>
                     {/* Team Column */}
                     <div>
-                      <h3 style={{ color: 'transparent', marginBottom: '10px', fontSize: '16px', userSelect: 'none' }}>
-                        .
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px', height: '24px' }}>
+                        Team
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {/* Home Team */}
@@ -613,7 +613,9 @@ const NFLPage = () => {
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          minHeight: '88px'
+                          minHeight: '118px',
+                          border: '3px solid transparent',
+                          boxSizing: 'border-box'
                         }}>
                           <img src={getTeamLogo(homeTeam)} alt={homeTeam} style={{ width: '32px', height: '32px' }} />
                           <div>
@@ -635,7 +637,9 @@ const NFLPage = () => {
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          minHeight: '88px'
+                          minHeight: '118px',
+                          border: '3px solid transparent',
+                          boxSizing: 'border-box'
                         }}>
                           <img src={getTeamLogo(awayTeam)} alt={awayTeam} style={{ width: '32px', height: '32px' }} />
                           <div>
@@ -653,7 +657,7 @@ const NFLPage = () => {
                     </div>
                     {/* Spread Column */}
                     <div>
-                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px', height: '24px' }}>
                         📊 Spread
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -811,7 +815,7 @@ const NFLPage = () => {
 
                     {/* Moneyline Column */}
                     <div>
-                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px', height: '24px' }}>
                         💰 Moneyline
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -963,7 +967,7 @@ const NFLPage = () => {
 
                     {/* Totals Column */}
                     <div>
-                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px' }}>
+                      <h3 style={{ color: theme.text, marginBottom: '10px', fontSize: '16px', height: '24px' }}>
                         🎯 Totals
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
