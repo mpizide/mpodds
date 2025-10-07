@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPlayerProps } from '../services/oddsAPI';
 import { calculateEV } from '../utils/oddsCalculations';
+import { calculatePropProbability } from '../utils/playerPropPredictions';
 import playerTeamsData from '../player_teams.json';
 
 const PlayerPropsPage = () => {
@@ -242,9 +243,14 @@ const PlayerPropsPage = () => {
         player.markets.forEach(market => {
           market.bestOver = findBestOdds(market.overOdds, selectedBookmakers);
           market.bestUnder = findBestOdds(market.underOdds, selectedBookmakers);
-          market.overEV = market.bestOver ? calculateEV(50, market.bestOver.odds) : null;
-          market.underEV = market.bestUnder ? calculateEV(50, market.bestUnder.odds) : null;
+
+          // Use ML predictions to calculate probabilities
+          const propProbs = calculatePropProbability(player.name, market.market, market.line);
+
+          market.overEV = market.bestOver ? calculateEV(propProbs.overProb, market.bestOver.odds) : null;
+          market.underEV = market.bestUnder ? calculateEV(propProbs.underProb, market.bestUnder.odds) : null;
           market.bestEV = Math.max(market.overEV || -Infinity, market.underEV || -Infinity);
+          market.mlPrediction = propProbs.prediction; // Store ML prediction
         });
       });
 
@@ -730,10 +736,20 @@ const PlayerPropsPage = () => {
                             fontSize: '12px',
                             fontWeight: '600',
                             color: theme.textSecondary,
-                            marginBottom: '8px'
+                            marginBottom: '4px'
                           }}>
                             {market.marketName}
                           </div>
+                          {market.mlPrediction && (
+                            <div style={{
+                              fontSize: '10px',
+                              color: '#3b82f6',
+                              marginBottom: '8px',
+                              fontWeight: '600'
+                            }}>
+                              🤖 Pred: {market.mlPrediction.toFixed(1)}
+                            </div>
+                          )}
 
                           <div style={{
                             display: 'flex',

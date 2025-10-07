@@ -1,0 +1,16 @@
+[
+  {
+    "week": 6,
+    "season": 2024,
+    "description": "Jaguars +3.5",
+    "matchup": "Jaguars vs Bears",
+    "bet_type": "spread",
+    "odds": -110,
+    "bookmaker": "FanDuel",
+    "ev": null,
+    "ml_prediction": null,
+    "result": "win",
+    "units_won": 0.91,
+    "pick_rank": "potw"
+  }
+]

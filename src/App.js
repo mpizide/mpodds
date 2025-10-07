@@ -4,6 +4,7 @@ import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import NFLPage from './pages/NFLPage';
 import PlayerPropsPage from './pages/PlayerPropsPage';
+import PickHistoryPage from './pages/PickHistoryPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/nfl" element={<NFLPage />} />
           <Route path="/nfl/props/:eventId" element={<PlayerPropsPage />} />
+          <Route path="/pick-history" element={<PickHistoryPage />} />
         </Routes>
       </div>
     </Router>

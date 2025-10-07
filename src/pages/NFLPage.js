@@ -20,7 +20,16 @@ const NFLPage = () => {
   });
   const [availableBookmakers, setAvailableBookmakers] = useState([]);
   const [showBookmakerDropdown, setShowBookmakerDropdown] = useState(false);
+  const [unitSize, setUnitSize] = useState(() => {
+    const saved = localStorage.getItem('unitSize');
+    return saved ? parseFloat(saved) : 1.0;
+  });
   const dropdownRef = useRef(null);
+
+  // Save unit size to localStorage
+  useEffect(() => {
+    localStorage.setItem('unitSize', unitSize.toString());
+  }, [unitSize]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -386,6 +395,214 @@ const NFLPage = () => {
     return topBet.gameId === gameId && topBet.type === type && topBet.team === team;
   };
 
+  const saveTopPicks = async () => {
+    const games = getFilteredGames();
+    const allBets = [];
+
+    games.forEach(game => {
+      const gameId = game.id;
+      const homeTeam = game.home_team;
+      const awayTeam = game.away_team;
+
+      // Moneyline bets
+      const homeBestML = findBestOdds(game.bookmakers, 'h2h', homeTeam, selectedBookmakers);
+      const awayBestML = findBestOdds(game.bookmakers, 'h2h', awayTeam, selectedBookmakers);
+      const homePredML = predictions[gameId]?.[`${homeTeam}_ml`];
+      const awayPredML = predictions[gameId]?.[`${awayTeam}_ml`];
+
+      if (homePredML && homeBestML) {
+        const ev = calculateEV(homePredML, homeBestML.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'moneyline',
+            team: homeTeam,
+            ev,
+            odds: homeBestML.odds,
+            bookmaker: homeBestML.bookmaker,
+            prediction: homePredML,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `${homeTeam} ML`
+          });
+        }
+      }
+      if (awayPredML && awayBestML) {
+        const ev = calculateEV(awayPredML, awayBestML.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'moneyline',
+            team: awayTeam,
+            ev,
+            odds: awayBestML.odds,
+            bookmaker: awayBestML.bookmaker,
+            prediction: awayPredML,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `${awayTeam} ML`
+          });
+        }
+      }
+
+      // Spread bets
+      const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam, selectedBookmakers);
+      const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam, selectedBookmakers);
+      const homePredSpread = predictions[gameId]?.[`${homeTeam}_spread`];
+      const awayPredSpread = predictions[gameId]?.[`${awayTeam}_spread`];
+
+      if (homePredSpread && homeBestSpread) {
+        const ev = calculateEV(homePredSpread, homeBestSpread.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'spread',
+            team: homeTeam,
+            ev,
+            odds: homeBestSpread.odds,
+            bookmaker: homeBestSpread.bookmaker,
+            prediction: homePredSpread,
+            line: homeBestSpread.point,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `${homeTeam} ${homeBestSpread.point > 0 ? '+' : ''}${homeBestSpread.point}`
+          });
+        }
+      }
+      if (awayPredSpread && awayBestSpread) {
+        const ev = calculateEV(awayPredSpread, awayBestSpread.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'spread',
+            team: awayTeam,
+            ev,
+            odds: awayBestSpread.odds,
+            bookmaker: awayBestSpread.bookmaker,
+            prediction: awayPredSpread,
+            line: awayBestSpread.point,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `${awayTeam} ${awayBestSpread.point > 0 ? '+' : ''}${awayBestSpread.point}`
+          });
+        }
+      }
+
+      // Totals bets
+      const overBest = findBestTotals(game.bookmakers, 'Over', selectedBookmakers);
+      const underBest = findBestTotals(game.bookmakers, 'Under', selectedBookmakers);
+      const overPred = predictions[gameId]?.['over'];
+      const underPred = predictions[gameId]?.['under'];
+
+      if (overPred && overBest) {
+        const ev = calculateEV(overPred, overBest.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'total',
+            team: 'Over',
+            ev,
+            odds: overBest.odds,
+            bookmaker: overBest.bookmaker,
+            prediction: overPred,
+            line: overBest.point,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `Over ${overBest.point}`
+          });
+        }
+      }
+      if (underPred && underBest) {
+        const ev = calculateEV(underPred, underBest.odds);
+        if (ev !== null) {
+          allBets.push({
+            gameId,
+            type: 'total',
+            team: 'Under',
+            ev,
+            odds: underBest.odds,
+            bookmaker: underBest.bookmaker,
+            prediction: underPred,
+            line: underBest.point,
+            matchup: `${awayTeam} @ ${homeTeam}`,
+            description: `Under ${underBest.point}`
+          });
+        }
+      }
+    });
+
+    // Sort by EV
+    const rankedBets = allBets.sort((a, b) => b.ev - a.ev);
+
+    // Get top 3 picks (green)
+    const topBets = [];
+    const seenGames = new Set();
+    const seenGameBetTypes = new Map();
+
+    for (const bet of rankedBets) {
+      const gameKey = bet.gameId;
+
+      if (bet.type === 'spread' || bet.type === 'moneyline') {
+        if (seenGames.has(gameKey)) {
+          continue;
+        }
+      }
+
+      if (bet.type === 'total') {
+        const totalKey = `${bet.gameId}-total`;
+        if (seenGameBetTypes.has(totalKey)) {
+          continue;
+        }
+        seenGameBetTypes.set(totalKey, true);
+      }
+
+      topBets.push(bet);
+
+      if (bet.type === 'spread' || bet.type === 'moneyline') {
+        seenGames.add(gameKey);
+      }
+
+      if (topBets.length === 3) break;
+    }
+
+    // Load existing pick history
+    try {
+      const response = await fetch('/pick_history.json');
+      let pickHistory = [];
+
+      if (response.ok) {
+        pickHistory = await response.json();
+      }
+
+      // Add new picks
+      const currentYear = new Date().getFullYear();
+
+      topBets.forEach((bet, index) => {
+        const pick = {
+          week: selectedWeek,
+          season: currentYear,
+          description: bet.description,
+          matchup: bet.matchup,
+          bet_type: bet.type,
+          odds: bet.odds,
+          bookmaker: bet.bookmaker,
+          ev: parseFloat(bet.ev.toFixed(2)),
+          ml_prediction: parseFloat(bet.prediction),
+          result: 'pending',
+          units_won: null,
+          unit_size: unitSize,
+          pick_rank: index === 0 ? 'potw' : 'top3'
+        };
+
+        pickHistory.push(pick);
+      });
+
+      // Save to localStorage for now (will need backend to persist)
+      localStorage.setItem('pickHistory', JSON.stringify(pickHistory));
+
+      alert(`✅ Saved ${topBets.length} picks for Week ${selectedWeek}!`);
+
+    } catch (err) {
+      console.error('Error saving picks:', err);
+      alert('❌ Failed to save picks');
+    }
+  };
+
   const theme = {
     bg: darkMode ? '#0f172a' : '#f1f5f9',
     cardBg: darkMode ? '#1e293b' : '#ffffff',
@@ -505,6 +722,61 @@ const NFLPage = () => {
               {darkMode ? '☀️' : '🌙'}
             </button>
             
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '14px', color: theme.text, fontWeight: '600' }}>
+                💵 Unit:
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                min="0.1"
+                value={unitSize}
+                onChange={(e) => setUnitSize(parseFloat(e.target.value) || 1.0)}
+                style={{
+                  padding: '8px 12px',
+                  background: theme.inputBg,
+                  color: theme.text,
+                  border: `2px solid ${theme.border}`,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  width: '80px'
+                }}
+              />
+            </div>
+
+            <button
+              onClick={saveTopPicks}
+              style={{
+                padding: '10px 20px',
+                background: '#a855f7',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px'
+              }}
+            >
+              💾 Save Top Picks
+            </button>
+
+            <button
+              onClick={() => navigate('/pick-history')}
+              style={{
+                padding: '10px 20px',
+                background: theme.cardBg,
+                color: theme.text,
+                border: `2px solid ${theme.border}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px'
+              }}
+            >
+              📊 Pick History
+            </button>
+
             <button
               onClick={fetchGames}
               style={{
