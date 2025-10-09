@@ -1,10 +1,24 @@
 import axios from 'axios';
+import { cacheService } from './cacheService';
 
-const API_KEY = 'e514f85edc19264c12ee274c2df7f21c';
+const API_KEY = process.env.REACT_APP_ODDS_API_KEY || 'e514f85edc19264c12ee274c2df7f21c';
 const BASE_URL = 'https://api.the-odds-api.com/v4';
 
-export const getNFLOdds = async () => {
+const NFL_ODDS_CACHE_KEY = 'odds_cache_nfl';
+
+export const getNFLOdds = async (forceRefresh = false) => {
   try {
+    // Check cache first unless force refresh
+    if (!forceRefresh) {
+      const cached = cacheService.get(NFL_ODDS_CACHE_KEY);
+      if (cached) {
+        console.log(`✅ Using cached odds (${cacheService.formatAge(cached.timestamp)})`);
+        return { data: cached.data, cached: true, timestamp: cached.timestamp };
+      }
+    }
+
+    // Fetch fresh data from API
+    console.log('🔄 Fetching fresh odds from API...');
     const response = await axios.get(`${BASE_URL}/sports/americanfootball_nfl/odds`, {
       params: {
         apiKey: API_KEY,
@@ -13,15 +27,41 @@ export const getNFLOdds = async () => {
         oddsFormat: 'american'
       }
     });
-    return response.data;
+
+    // Cache the response
+    cacheService.set(NFL_ODDS_CACHE_KEY, response.data);
+    console.log('✅ Odds cached successfully');
+
+    return { data: response.data, cached: false, timestamp: Date.now() };
   } catch (error) {
     console.error('Error fetching odds:', error);
+
+    // Try to return stale cache as fallback
+    const cached = cacheService.get(NFL_ODDS_CACHE_KEY);
+    if (cached) {
+      console.warn('⚠️ Using stale cache due to API error');
+      return { data: cached.data, cached: true, timestamp: cached.timestamp, stale: true };
+    }
+
     throw error;
   }
 };
 
-export const getPlayerProps = async (eventId) => {
+export const getPlayerProps = async (eventId, forceRefresh = false) => {
   try {
+    const cacheKey = `props_cache_${eventId}`;
+
+    // Check cache first unless force refresh
+    if (!forceRefresh) {
+      const cached = cacheService.get(cacheKey);
+      if (cached) {
+        console.log(`✅ Using cached props for ${eventId} (${cacheService.formatAge(cached.timestamp)})`);
+        return { data: cached.data, cached: true, timestamp: cached.timestamp };
+      }
+    }
+
+    // Fetch fresh data from API
+    console.log(`🔄 Fetching fresh props for ${eventId}...`);
     const playerPropMarkets = [
       'player_pass_yds',
       'player_pass_tds',
@@ -51,9 +91,31 @@ export const getPlayerProps = async (eventId) => {
         }
       }
     );
-    return response.data;
+
+    // Cache the response
+    cacheService.set(cacheKey, response.data);
+    console.log(`✅ Props for ${eventId} cached successfully`);
+
+    return { data: response.data, cached: false, timestamp: Date.now() };
   } catch (error) {
     console.error('Error fetching player props:', error);
+
+    // Try to return stale cache as fallback
+    const cacheKey = `props_cache_${eventId}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) {
+      console.warn(`⚠️ Using stale cache for ${eventId} due to API error`);
+      return { data: cached.data, cached: true, timestamp: cached.timestamp, stale: true };
+    }
+
     throw error;
   }
+};
+
+/**
+ * Clear all cached odds data
+ */
+export const clearAllCache = () => {
+  cacheService.clearAll();
+  console.log('🗑️ All cache cleared');
 };

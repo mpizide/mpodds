@@ -14,12 +14,48 @@ export const americanToImplied = (american) => {
   return null;
 };
 
-export const calculateEV = (yourProbability, bookOdds) => {
+export const calculateEV = (yourProbability, bookOdds, betType = null) => {
   const prob = parseFloat(yourProbability) / 100;
   const decimal = americanToDecimal(bookOdds);
   if (!prob || !decimal || prob <= 0 || prob >= 1) return null;
   const profit = decimal - 1;
-  const ev = (prob * profit) - ((1 - prob) * 1);
+  let ev = (prob * profit) - ((1 - prob) * 1);
+
+  // Apply risk penalty to moneylines based on odds
+  if (betType === 'moneyline') {
+    const odds = parseFloat(bookOdds);
+
+    // Extreme penalty for massive underdogs (+200 or higher) - essentially eliminate these
+    if (odds >= 200) {
+      ev = ev * 0.05; // 95% penalty - make it nearly impossible to be top pick
+    }
+    // Very heavy penalty for big underdogs (+150 to +199)
+    else if (odds >= 150) {
+      ev = ev * 0.2; // 80% penalty
+    }
+    // Heavy penalty for medium underdogs (+110 to +149)
+    else if (odds >= 110) {
+      ev = ev * 0.5; // 50% penalty
+    }
+    // Moderate penalty for slight underdogs (+100 to +109)
+    else if (odds >= 100) {
+      ev = ev * 0.7; // 30% penalty
+    }
+    // Slight penalty for favorites (negative odds)
+    else if (odds < 0 && odds >= -150) {
+      ev = ev * 0.9; // 10% penalty (still prefer spreads)
+    }
+    // Heavy penalty for big favorites (worse than -150)
+    else if (odds < -150) {
+      ev = ev * 0.5; // 50% penalty (too much juice)
+    }
+  }
+
+  // Small bonus for spreads (more consistent)
+  if (betType === 'spread') {
+    ev = ev * 1.1; // 10% bonus
+  }
+
   return ev * 100;
 };
 

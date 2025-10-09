@@ -150,12 +150,14 @@ const NFLPage = () => {
     return gamesByWeek;
   };
 
-  const fetchGames = useCallback(async () => {
+  const fetchGames = useCallback(async (forceRefresh = false) => {
     try {
       setLoading(true);
-      const data = await getNFLOdds();
+      const response = await getNFLOdds(forceRefresh);
+      const data = response.data;
+
       setAllGames(data);
-      
+
       const gamesByWeek = groupGamesByWeek(data);
       const weekNumbers = Object.keys(gamesByWeek).map(Number).sort((a, b) => a - b);
       setWeeks(weekNumbers);
@@ -185,7 +187,10 @@ const NFLPage = () => {
       data.forEach(game => {
         // Use ML predictions if available, otherwise fall back to implied odds
         if (mlPredictions[game.id]) {
-          initialPredictions[game.id] = mlPredictions[game.id];
+          initialPredictions[game.id] = {
+            ...mlPredictions[game.id],
+            _hasMLPredictions: true  // Flag to show 🤖 icon
+          };
         } else {
           // Fallback to implied odds calculation
           const homeBest = findBestOdds(game.bookmakers, 'h2h', game.home_team);
@@ -276,31 +281,37 @@ const NFLPage = () => {
       const awayPredML = predictions[gameId]?.[`${awayTeam}_ml`];
       
       if (homePredML && homeBestML) {
-        const ev = calculateEV(homePredML, homeBestML.odds);
-        if (ev !== null) {
-          allBets.push({ gameId, type: 'ml', team: homeTeam, ev });
+        // Skip moneylines with odds +200 or higher - too risky for top picks
+        if (homeBestML.odds < 200) {
+          const ev = calculateEV(homePredML, homeBestML.odds, 'moneyline');
+          if (ev !== null) {
+            allBets.push({ gameId, type: 'ml', team: homeTeam, ev });
+          }
         }
       }
       if (awayPredML && awayBestML) {
-        const ev = calculateEV(awayPredML, awayBestML.odds);
-        if (ev !== null) {
-          allBets.push({ gameId, type: 'ml', team: awayTeam, ev });
+        // Skip moneylines with odds +200 or higher - too risky for top picks
+        if (awayBestML.odds < 200) {
+          const ev = calculateEV(awayPredML, awayBestML.odds, 'moneyline');
+          if (ev !== null) {
+            allBets.push({ gameId, type: 'ml', team: awayTeam, ev });
+          }
         }
       }
-      
+
       const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam);
       const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam);
       const homePredSpread = predictions[gameId]?.[`${homeTeam}_spread`];
       const awayPredSpread = predictions[gameId]?.[`${awayTeam}_spread`];
-      
+
       if (homePredSpread && homeBestSpread) {
-        const ev = calculateEV(homePredSpread, homeBestSpread.odds);
+        const ev = calculateEV(homePredSpread, homeBestSpread.odds, 'spread');
         if (ev !== null) {
           allBets.push({ gameId, type: 'spread', team: homeTeam, ev });
         }
       }
       if (awayPredSpread && awayBestSpread) {
-        const ev = calculateEV(awayPredSpread, awayBestSpread.odds);
+        const ev = calculateEV(awayPredSpread, awayBestSpread.odds, 'spread');
         if (ev !== null) {
           allBets.push({ gameId, type: 'spread', team: awayTeam, ev });
         }
@@ -312,13 +323,13 @@ const NFLPage = () => {
       const underPred = predictions[gameId]?.['under'];
       
       if (overPred && overBest) {
-        const ev = calculateEV(overPred, overBest.odds);
+        const ev = calculateEV(overPred, overBest.odds, 'total');
         if (ev !== null) {
           allBets.push({ gameId, type: 'total', team: 'Over', ev });
         }
       }
       if (underPred && underBest) {
-        const ev = calculateEV(underPred, underBest.odds);
+        const ev = calculateEV(underPred, underBest.odds, 'total');
         if (ev !== null) {
           allBets.push({ gameId, type: 'total', team: 'Under', ev });
         }
@@ -411,35 +422,41 @@ const NFLPage = () => {
       const awayPredML = predictions[gameId]?.[`${awayTeam}_ml`];
 
       if (homePredML && homeBestML) {
-        const ev = calculateEV(homePredML, homeBestML.odds);
-        if (ev !== null) {
-          allBets.push({
-            gameId,
-            type: 'moneyline',
-            team: homeTeam,
-            ev,
-            odds: homeBestML.odds,
-            bookmaker: homeBestML.bookmaker,
-            prediction: homePredML,
-            matchup: `${awayTeam} @ ${homeTeam}`,
-            description: `${homeTeam} ML`
-          });
+        // Skip moneylines with odds +200 or higher - too risky for top picks
+        if (homeBestML.odds < 200) {
+          const ev = calculateEV(homePredML, homeBestML.odds, 'moneyline');
+          if (ev !== null) {
+            allBets.push({
+              gameId,
+              type: 'moneyline',
+              team: homeTeam,
+              ev,
+              odds: homeBestML.odds,
+              bookmaker: homeBestML.bookmaker,
+              prediction: homePredML,
+              matchup: `${awayTeam} @ ${homeTeam}`,
+              description: `${homeTeam} ML`
+            });
+          }
         }
       }
       if (awayPredML && awayBestML) {
-        const ev = calculateEV(awayPredML, awayBestML.odds);
-        if (ev !== null) {
-          allBets.push({
-            gameId,
-            type: 'moneyline',
-            team: awayTeam,
-            ev,
-            odds: awayBestML.odds,
-            bookmaker: awayBestML.bookmaker,
-            prediction: awayPredML,
-            matchup: `${awayTeam} @ ${homeTeam}`,
-            description: `${awayTeam} ML`
-          });
+        // Skip moneylines with odds +200 or higher - too risky for top picks
+        if (awayBestML.odds < 200) {
+          const ev = calculateEV(awayPredML, awayBestML.odds, 'moneyline');
+          if (ev !== null) {
+            allBets.push({
+              gameId,
+              type: 'moneyline',
+              team: awayTeam,
+              ev,
+              odds: awayBestML.odds,
+              bookmaker: awayBestML.bookmaker,
+              prediction: awayPredML,
+              matchup: `${awayTeam} @ ${homeTeam}`,
+              description: `${awayTeam} ML`
+            });
+          }
         }
       }
 
@@ -450,7 +467,7 @@ const NFLPage = () => {
       const awayPredSpread = predictions[gameId]?.[`${awayTeam}_spread`];
 
       if (homePredSpread && homeBestSpread) {
-        const ev = calculateEV(homePredSpread, homeBestSpread.odds);
+        const ev = calculateEV(homePredSpread, homeBestSpread.odds, 'spread');
         if (ev !== null) {
           allBets.push({
             gameId,
@@ -467,7 +484,7 @@ const NFLPage = () => {
         }
       }
       if (awayPredSpread && awayBestSpread) {
-        const ev = calculateEV(awayPredSpread, awayBestSpread.odds);
+        const ev = calculateEV(awayPredSpread, awayBestSpread.odds, 'spread');
         if (ev !== null) {
           allBets.push({
             gameId,
@@ -491,7 +508,7 @@ const NFLPage = () => {
       const underPred = predictions[gameId]?.['under'];
 
       if (overPred && overBest) {
-        const ev = calculateEV(overPred, overBest.odds);
+        const ev = calculateEV(overPred, overBest.odds, 'total');
         if (ev !== null) {
           allBets.push({
             gameId,
@@ -508,7 +525,7 @@ const NFLPage = () => {
         }
       }
       if (underPred && underBest) {
-        const ev = calculateEV(underPred, underBest.odds);
+        const ev = calculateEV(underPred, underBest.odds, 'total');
         if (ev !== null) {
           allBets.push({
             gameId,
@@ -778,7 +795,7 @@ const NFLPage = () => {
             </button>
 
             <button
-              onClick={fetchGames}
+              onClick={() => fetchGames(true)}
               style={{
                 padding: '10px 20px',
                 background: '#10b981',
@@ -1010,8 +1027,8 @@ const NFLPage = () => {
               const awayBestML = findBestOdds(game.bookmakers, 'h2h', awayTeam, selectedBookmakers);
               const homePredML = predictions[game.id]?.[`${homeTeam}_ml`];
               const awayPredML = predictions[game.id]?.[`${awayTeam}_ml`];
-              const homeEV_ML = homePredML && homeBestML ? calculateEV(homePredML, homeBestML.odds) : null;
-              const awayEV_ML = awayPredML && awayBestML ? calculateEV(awayPredML, awayBestML.odds) : null;
+              const homeEV_ML = homePredML && homeBestML ? calculateEV(homePredML, homeBestML.odds, 'moneyline') : null;
+              const awayEV_ML = awayPredML && awayBestML ? calculateEV(awayPredML, awayBestML.odds, 'moneyline') : null;
               
               const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam, selectedBookmakers);
               const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam, selectedBookmakers);
@@ -1028,15 +1045,15 @@ const NFLPage = () => {
               });
               const homePredSpread = predictions[game.id]?.[`${homeTeam}_spread`];
               const awayPredSpread = predictions[game.id]?.[`${awayTeam}_spread`];
-              const homeEV_Spread = homePredSpread && homeBestSpread ? calculateEV(homePredSpread, homeBestSpread.odds) : null;
-              const awayEV_Spread = awayPredSpread && awayBestSpread ? calculateEV(awayPredSpread, awayBestSpread.odds) : null;
+              const homeEV_Spread = homePredSpread && homeBestSpread ? calculateEV(homePredSpread, homeBestSpread.odds, 'spread') : null;
+              const awayEV_Spread = awayPredSpread && awayBestSpread ? calculateEV(awayPredSpread, awayBestSpread.odds, 'spread') : null;
               
               const overBest = findBestTotals(game.bookmakers, 'Over', selectedBookmakers);
               const underBest = findBestTotals(game.bookmakers, 'Under', selectedBookmakers);
               const overPred = predictions[game.id]?.['over'];
               const underPred = predictions[game.id]?.['under'];
-              const overEV = overPred && overBest ? calculateEV(overPred, overBest.odds) : null;
-              const underEV = underPred && underBest ? calculateEV(underPred, underBest.odds) : null;
+              const overEV = overPred && overBest ? calculateEV(overPred, overBest.odds, 'total') : null;
+              const underEV = underPred && underBest ? calculateEV(underPred, underBest.odds, 'total') : null;
 
               return (
                 <div 
@@ -1197,6 +1214,9 @@ const NFLPage = () => {
                               {homeBestSpread.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"
@@ -1272,6 +1292,9 @@ const NFLPage = () => {
                               {awayBestSpread.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"
@@ -1352,6 +1375,9 @@ const NFLPage = () => {
                               {homeBestML.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"
@@ -1424,6 +1450,9 @@ const NFLPage = () => {
                               {awayBestML.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"
@@ -1507,6 +1536,9 @@ const NFLPage = () => {
                               {overBest.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"
@@ -1582,6 +1614,9 @@ const NFLPage = () => {
                               {underBest.bookmaker}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {predictions[game.id]?._hasMLPredictions && (
+                                <span style={{ fontSize: '12px' }} title="ML Prediction">🤖</span>
+                              )}
                               <input
                                 type="number"
                                 min="0"

@@ -92,11 +92,37 @@ const PickHistoryPage = () => {
     const types = {
       'moneyline': 'ML',
       'spread': 'Spread',
+      'total': 'Total',
       'total_over': 'Over',
       'total_under': 'Under',
       'player_prop': 'Player Prop'
     };
     return types[betType] || betType;
+  };
+
+  const updatePickResult = (week, pickIndex, result) => {
+    const updatedHistory = [...pickHistory];
+    const pickInHistory = updatedHistory.findIndex((p, idx) => {
+      return p.week === parseInt(week) && picksByWeek[week][pickIndex] === p;
+    });
+
+    if (pickInHistory !== -1) {
+      updatedHistory[pickInHistory].result = result;
+
+      // Calculate units won
+      if (result === 'win') {
+        const unitSize = updatedHistory[pickInHistory].unit_size || 1.0;
+        const odds = updatedHistory[pickInHistory].odds;
+        updatedHistory[pickInHistory].units_won = unitSize * (odds > 0 ? odds / 100 : 100 / Math.abs(odds));
+      } else if (result === 'loss') {
+        updatedHistory[pickInHistory].units_won = -(updatedHistory[pickInHistory].unit_size || 1.0);
+      } else if (result === 'push') {
+        updatedHistory[pickInHistory].units_won = 0;
+      }
+
+      setPickHistory(updatedHistory);
+      localStorage.setItem('pickHistory', JSON.stringify(updatedHistory));
+    }
   };
 
   return (
@@ -354,20 +380,70 @@ const PickHistoryPage = () => {
                         </div>
                       )}
 
-                      <div style={{
-                        width: '80px',
-                        height: '80px',
-                        borderRadius: '50%',
-                        background: getResultColor(pick.result),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontSize: '36px',
-                        fontWeight: '700'
-                      }}>
-                        {getResultIcon(pick.result)}
-                      </div>
+                      {pick.result === 'pending' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <button
+                            onClick={() => updatePickResult(week, idx, 'win')}
+                            style={{
+                              padding: '8px 16px',
+                              background: '#10b981',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              fontWeight: '600',
+                              fontSize: '13px'
+                            }}
+                          >
+                            ✓ Win
+                          </button>
+                          <button
+                            onClick={() => updatePickResult(week, idx, 'loss')}
+                            style={{
+                              padding: '8px 16px',
+                              background: '#ef4444',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              fontWeight: '600',
+                              fontSize: '13px'
+                            }}
+                          >
+                            ✗ Loss
+                          </button>
+                          <button
+                            onClick={() => updatePickResult(week, idx, 'push')}
+                            style={{
+                              padding: '8px 16px',
+                              background: '#fbbf24',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              fontWeight: '600',
+                              fontSize: '13px'
+                            }}
+                          >
+                            − Push
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{
+                          width: '80px',
+                          height: '80px',
+                          borderRadius: '50%',
+                          background: getResultColor(pick.result),
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontSize: '36px',
+                          fontWeight: '700'
+                        }}>
+                          {getResultIcon(pick.result)}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
