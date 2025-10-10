@@ -113,6 +113,54 @@ export const getPlayerProps = async (eventId, forceRefresh = false) => {
 };
 
 /**
+ * Get College Football odds with caching
+ * @param {boolean} forceRefresh - Force fresh API call
+ * @returns {object} - { data, cached, timestamp }
+ */
+export const getCFBOdds = async (forceRefresh = false) => {
+  try {
+    const cacheKey = 'odds_cache_cfb';
+
+    // Check cache first unless force refresh
+    if (!forceRefresh) {
+      const cached = cacheService.get(cacheKey);
+      if (cached) {
+        console.log(`✅ Using cached CFB odds (${cacheService.formatAge(cached.timestamp)})`);
+        return { data: cached.data, cached: true, timestamp: cached.timestamp };
+      }
+    }
+
+    // Fetch fresh data from API
+    console.log('🔄 Fetching fresh CFB odds from API...');
+    const response = await axios.get(`${BASE_URL}/sports/americanfootball_ncaaf/odds`, {
+      params: {
+        apiKey: API_KEY,
+        regions: 'us',
+        markets: 'h2h,spreads,totals',
+        oddsFormat: 'american'
+      }
+    });
+
+    // Cache the response
+    cacheService.set(cacheKey, response.data);
+    console.log('✅ CFB odds cached successfully');
+
+    return { data: response.data, cached: false, timestamp: Date.now() };
+  } catch (error) {
+    console.error('Error fetching CFB odds:', error);
+
+    // Try to return stale cache as fallback
+    const cached = cacheService.get('odds_cache_cfb');
+    if (cached) {
+      console.warn('⚠️ Using stale CFB cache due to API error');
+      return { data: cached.data, cached: true, timestamp: cached.timestamp, stale: true };
+    }
+
+    throw error;
+  }
+};
+
+/**
  * Clear all cached odds data
  */
 export const clearAllCache = () => {

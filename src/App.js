@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import NFLPage from './pages/NFLPage';
+import CFBPage from './pages/CFBPage';
 import PlayerPropsPage from './pages/PlayerPropsPage';
 import PickHistoryPage from './pages/PickHistoryPage';
 
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/nfl" element={<NFLPage />} />
+          <Route path="/cfb" element={<CFBPage />} />
           <Route path="/nfl/props/:eventId" element={<PlayerPropsPage />} />
           <Route path="/pick-history" element={<PickHistoryPage />} />
         </Routes>

@@ -6,7 +6,8 @@ const Navigation = () => {
   
   const navItems = [
     { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/nfl', label: 'NFL', icon: '🏈' }
+    { path: '/nfl', label: 'NFL', icon: '🏈' },
+    { path: '/cfb', label: 'College FB', icon: '🏟️' }
   ];
 
   const isActive = (path) => location.pathname === path;
