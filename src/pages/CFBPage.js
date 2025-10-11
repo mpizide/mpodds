@@ -4,6 +4,7 @@ import { getCFBOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
 import { isTop25Game, getTeamRanking } from '../utils/top25Teams';
 import { getCFBTeamLogo, getCFBTeamShortName } from '../utils/cfbLogos';
+import { loadCFBMLPredictions } from '../utils/cfbMLPredictions';
 
 const CFBPage = () => {
   const navigate = useNavigate();
@@ -125,51 +126,60 @@ const CFBPage = () => {
       const allBookmakers = Array.from(bookmakerSet).sort();
       setAvailableBookmakers(allBookmakers);
 
-      // Use implied odds for CFB (no ML models yet)
+      // Load CFB ML predictions
+      const mlPredictions = loadCFBMLPredictions(data);
+
+      // For games without ML predictions, fall back to implied odds
       const initialPredictions = {};
       data.forEach(game => {
-          const homeBest = findBestOdds(game.bookmakers, 'h2h', game.home_team);
-          const awayBest = findBestOdds(game.bookmakers, 'h2h', game.away_team);
-
-          initialPredictions[game.id] = {};
-
-          if (homeBest && awayBest) {
-            const homeImplied = americanToImplied(homeBest.odds);
-            const awayImplied = americanToImplied(awayBest.odds);
-            const total = homeImplied + awayImplied;
-
-            initialPredictions[game.id][`${game.home_team}_ml`] = ((homeImplied / total) * 100).toFixed(1);
-            initialPredictions[game.id][`${game.away_team}_ml`] = ((awayImplied / total) * 100).toFixed(1);
-          }
-
-          const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', game.home_team);
-          const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', game.away_team);
-
-          if (homeBestSpread && awayBestSpread) {
-            const homeSpreadImplied = americanToImplied(homeBestSpread.odds);
-            const awaySpreadImplied = americanToImplied(awayBestSpread.odds);
-            const spreadTotal = homeSpreadImplied + awaySpreadImplied;
-
-            initialPredictions[game.id][`${game.home_team}_spread`] = ((homeSpreadImplied / spreadTotal) * 100).toFixed(1);
-            initialPredictions[game.id][`${game.away_team}_spread`] = ((awaySpreadImplied / spreadTotal) * 100).toFixed(1);
+          // Check if we have ML prediction for this game
+          if (mlPredictions[game.id]) {
+            initialPredictions[game.id] = mlPredictions[game.id];
           } else {
-            initialPredictions[game.id][`${game.home_team}_spread`] = '50.0';
-            initialPredictions[game.id][`${game.away_team}_spread`] = '50.0';
-          }
+            // Fallback to implied odds
+            const homeBest = findBestOdds(game.bookmakers, 'h2h', game.home_team);
+            const awayBest = findBestOdds(game.bookmakers, 'h2h', game.away_team);
 
-          const overBest = findBestTotals(game.bookmakers, 'Over');
-          const underBest = findBestTotals(game.bookmakers, 'Under');
+            initialPredictions[game.id] = {};
 
-          if (overBest && underBest) {
-            const overImplied = americanToImplied(overBest.odds);
-            const underImplied = americanToImplied(underBest.odds);
-            const totalsTotal = overImplied + underImplied;
+            if (homeBest && awayBest) {
+              const homeImplied = americanToImplied(homeBest.odds);
+              const awayImplied = americanToImplied(awayBest.odds);
+              const total = homeImplied + awayImplied;
 
-            initialPredictions[game.id]['over'] = ((overImplied / totalsTotal) * 100).toFixed(1);
-            initialPredictions[game.id]['under'] = ((underImplied / totalsTotal) * 100).toFixed(1);
-          } else {
-            initialPredictions[game.id]['over'] = '50.0';
-            initialPredictions[game.id]['under'] = '50.0';
+              initialPredictions[game.id][`${game.home_team}_ml`] = ((homeImplied / total) * 100).toFixed(1);
+              initialPredictions[game.id][`${game.away_team}_ml`] = ((awayImplied / total) * 100).toFixed(1);
+            }
+
+            const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', game.home_team);
+            const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', game.away_team);
+
+            if (homeBestSpread && awayBestSpread) {
+              const homeSpreadImplied = americanToImplied(homeBestSpread.odds);
+              const awaySpreadImplied = americanToImplied(awayBestSpread.odds);
+              const spreadTotal = homeSpreadImplied + awaySpreadImplied;
+
+              initialPredictions[game.id][`${game.home_team}_spread`] = ((homeSpreadImplied / spreadTotal) * 100).toFixed(1);
+              initialPredictions[game.id][`${game.away_team}_spread`] = ((awaySpreadImplied / spreadTotal) * 100).toFixed(1);
+            } else {
+              initialPredictions[game.id][`${game.home_team}_spread`] = '50.0';
+              initialPredictions[game.id][`${game.away_team}_spread`] = '50.0';
+            }
+
+            const overBest = findBestTotals(game.bookmakers, 'Over');
+            const underBest = findBestTotals(game.bookmakers, 'Under');
+
+            if (overBest && underBest) {
+              const overImplied = americanToImplied(overBest.odds);
+              const underImplied = americanToImplied(underBest.odds);
+              const totalsTotal = overImplied + underImplied;
+
+              initialPredictions[game.id]['over'] = ((overImplied / totalsTotal) * 100).toFixed(1);
+              initialPredictions[game.id]['under'] = ((underImplied / totalsTotal) * 100).toFixed(1);
+            } else {
+              initialPredictions[game.id]['over'] = '50.0';
+              initialPredictions[game.id]['under'] = '50.0';
+            }
           }
       });
 
@@ -192,6 +202,11 @@ const CFBPage = () => {
       ...prev,
       [gameId]: { ...prev[gameId], [key]: probability }
     }));
+  };
+
+  // Check if game has ML predictions (not just implied odds)
+  const hasMLPrediction = (gameId) => {
+    return predictions[gameId]?._predicted_spread !== undefined;
   };
 
   const getFilteredGames = () => {
@@ -1197,6 +1212,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {homeEV_Spread !== null && (
                                 <span style={{
                                   fontSize: '11px',
@@ -1272,6 +1290,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {awayEV_Spread !== null && (
                                 <span style={{
                                   fontSize: '11px',
@@ -1352,6 +1373,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {homeEV_ML !== null && (
                                 <span style={{
                                   fontSize: '11px',
@@ -1424,6 +1448,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {awayEV_ML !== null && (
                                 <span style={{
                                   fontSize: '11px',
@@ -1507,6 +1534,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {overEV !== null && (
                                 <span style={{
                                   fontSize: '11px',
@@ -1582,6 +1612,9 @@ const CFBPage = () => {
                                   color: theme.text
                                 }}
                               />
+                              {hasMLPrediction(game.id) && (
+                                <span style={{ fontSize: '12px' }} title="ML Model Prediction">🤖</span>
+                              )}
                               {underEV !== null && (
                                 <span style={{
                                   fontSize: '11px',
