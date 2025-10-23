@@ -8,6 +8,7 @@ import NBAPage from './pages/NBAPage';
 import PlayerPropsPage from './pages/PlayerPropsPage';
 import NBAPlayerPropsPage from './pages/NBAPlayerPropsPage';
 import PickHistoryPage from './pages/PickHistoryPage';
+import NBAPickHistoryPage from './pages/NBAPickHistoryPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/nfl/props/:eventId" element={<PlayerPropsPage />} />
           <Route path="/nba/props/:eventId" element={<NBAPlayerPropsPage />} />
           <Route path="/pick-history" element={<PickHistoryPage />} />
+          <Route path="/nba-pick-history" element={<NBAPickHistoryPage />} />
         </Routes>
       </div>
     </Router>

@@ -408,7 +408,7 @@ const NBAPage = () => {
   const savePickOfDay = (game, type, team, odds, points, prediction, ev) => {
     try {
       // Load existing pick history
-      const existingHistory = JSON.parse(localStorage.getItem('pick_history') || '[]');
+      const existingHistory = JSON.parse(localStorage.getItem('nba_pick_history') || '[]');
 
       const homeTeam = game.home_team;
       const awayTeam = game.away_team;
@@ -460,7 +460,7 @@ const NBAPage = () => {
       existingHistory.unshift(newPick);
 
       // Save back to localStorage
-      localStorage.setItem('pick_history', JSON.stringify(existingHistory));
+      localStorage.setItem('nba_pick_history', JSON.stringify(existingHistory));
 
       alert(`✅ Pick of Day saved!\n${description} - ${matchup}`);
     } catch (error) {
@@ -610,6 +610,22 @@ const NBAPage = () => {
                 }}
               />
             </div>
+
+            <button
+              onClick={() => navigate('/nba-pick-history')}
+              style={{
+                padding: '10px 20px',
+                background: theme.cardBg,
+                color: theme.text,
+                border: `2px solid ${theme.border}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px'
+              }}
+            >
+              📊 NBA Pick History
+            </button>
 
             <button
               onClick={() => fetchGames(true)}
