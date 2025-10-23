@@ -72,6 +72,62 @@ const HomePage = () => {
               Live odds and EV calculator
             </p>
           </Link>
+
+          <Link
+            to="/nba"
+            style={{
+              textDecoration: 'none',
+              background: theme.cardBg,
+              borderRadius: '20px',
+              padding: '40px',
+              boxShadow: darkMode ? '0 10px 30px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              border: darkMode ? '1px solid #334155' : 'none'
+            }}
+          >
+            <div style={{ fontSize: '64px', textAlign: 'center', marginBottom: '20px' }}>
+              🏀
+            </div>
+            <h2 style={{
+              fontSize: '32px',
+              color: '#f97316',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              NBA
+            </h2>
+            <p style={{ fontSize: '16px', color: theme.textSecondary, textAlign: 'center' }}>
+              Live odds and EV calculator
+            </p>
+          </Link>
+
+          <Link
+            to="/cfb"
+            style={{
+              textDecoration: 'none',
+              background: theme.cardBg,
+              borderRadius: '20px',
+              padding: '40px',
+              boxShadow: darkMode ? '0 10px 30px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              border: darkMode ? '1px solid #334155' : 'none'
+            }}
+          >
+            <div style={{ fontSize: '64px', textAlign: 'center', marginBottom: '20px' }}>
+              🏟️
+            </div>
+            <h2 style={{
+              fontSize: '32px',
+              color: '#3b82f6',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              College Football
+            </h2>
+            <p style={{ fontSize: '16px', color: theme.textSecondary, textAlign: 'center' }}>
+              Live odds and EV calculator
+            </p>
+          </Link>
         </div>
       </div>
     </div>

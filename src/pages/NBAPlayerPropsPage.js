@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPlayerProps } from '../services/oddsAPI';
+import { getNBAPlayerProps } from '../services/oddsAPI';
 import { calculateEV } from '../utils/oddsCalculations';
-import { calculatePropProbability } from '../utils/playerPropPredictions';
-import playerTeamsData from '../player_teams.json';
+import { calculateNBAPropProbability } from '../utils/nbaPlayerPropPredictions';
+import nbaPlayerTeamsData from '../nba_player_teams.json';
 
-const PlayerPropsPage = () => {
+const NBAPlayerPropsPage = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const [propsData, setPropsData] = useState(null);
@@ -14,7 +14,7 @@ const PlayerPropsPage = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [gameInfo, setGameInfo] = useState({ homeTeam: '', awayTeam: '', commence_time: '' });
   const [selectedBookmakers, setSelectedBookmakers] = useState(() => {
-    const saved = localStorage.getItem('selectedBookmakers');
+    const saved = localStorage.getItem('nba_selectedBookmakers');
     return saved ? JSON.parse(saved) : [];
   });
   const [availableBookmakers, setAvailableBookmakers] = useState([]);
@@ -24,92 +24,98 @@ const PlayerPropsPage = () => {
 
   const getTeamAbbreviation = (fullTeamName) => {
     const teamAbbreviations = {
-      'Arizona Cardinals': 'ARI',
-      'Atlanta Falcons': 'ATL',
-      'Baltimore Ravens': 'BAL',
-      'Buffalo Bills': 'BUF',
-      'Carolina Panthers': 'CAR',
-      'Chicago Bears': 'CHI',
-      'Cincinnati Bengals': 'CIN',
-      'Cleveland Browns': 'CLE',
-      'Dallas Cowboys': 'DAL',
-      'Denver Broncos': 'DEN',
-      'Detroit Lions': 'DET',
-      'Green Bay Packers': 'GB',
-      'Houston Texans': 'HOU',
-      'Indianapolis Colts': 'IND',
-      'Jacksonville Jaguars': 'JAX',
-      'Kansas City Chiefs': 'KC',
-      'Las Vegas Raiders': 'LV',
-      'Los Angeles Chargers': 'LAC',
-      'Los Angeles Rams': 'LA',
-      'Miami Dolphins': 'MIA',
-      'Minnesota Vikings': 'MIN',
-      'New England Patriots': 'NE',
-      'New Orleans Saints': 'NO',
-      'New York Giants': 'NYG',
-      'New York Jets': 'NYJ',
-      'Philadelphia Eagles': 'PHI',
-      'Pittsburgh Steelers': 'PIT',
-      'San Francisco 49ers': 'SF',
-      'Seattle Seahawks': 'SEA',
-      'Tampa Bay Buccaneers': 'TB',
-      'Tennessee Titans': 'TEN',
-      'Washington Commanders': 'WAS'
+      'Atlanta Hawks': 'ATL',
+      'Boston Celtics': 'BOS',
+      'Brooklyn Nets': 'BKN',
+      'Charlotte Hornets': 'CHA',
+      'Chicago Bulls': 'CHI',
+      'Cleveland Cavaliers': 'CLE',
+      'Dallas Mavericks': 'DAL',
+      'Denver Nuggets': 'DEN',
+      'Detroit Pistons': 'DET',
+      'Golden State Warriors': 'GSW',
+      'Houston Rockets': 'HOU',
+      'Indiana Pacers': 'IND',
+      'Los Angeles Clippers': 'LAC',
+      'Los Angeles Lakers': 'LAL',
+      'Memphis Grizzlies': 'MEM',
+      'Miami Heat': 'MIA',
+      'Milwaukee Bucks': 'MIL',
+      'Minnesota Timberwolves': 'MIN',
+      'New Orleans Pelicans': 'NOP',
+      'New York Knicks': 'NYK',
+      'Oklahoma City Thunder': 'OKC',
+      'Orlando Magic': 'ORL',
+      'Philadelphia 76ers': 'PHI',
+      'Phoenix Suns': 'PHX',
+      'Portland Trail Blazers': 'POR',
+      'Sacramento Kings': 'SAC',
+      'San Antonio Spurs': 'SAS',
+      'Toronto Raptors': 'TOR',
+      'Utah Jazz': 'UTA',
+      'Washington Wizards': 'WAS'
     };
     return teamAbbreviations[fullTeamName] || '';
   };
 
   const getTeamLogo = (teamName) => {
     const teamLogos = {
-      'Arizona Cardinals': 'https://a.espncdn.com/i/teamlogos/nfl/500/ari.png',
-      'Atlanta Falcons': 'https://a.espncdn.com/i/teamlogos/nfl/500/atl.png',
-      'Baltimore Ravens': 'https://a.espncdn.com/i/teamlogos/nfl/500/bal.png',
-      'Buffalo Bills': 'https://a.espncdn.com/i/teamlogos/nfl/500/buf.png',
-      'Carolina Panthers': 'https://a.espncdn.com/i/teamlogos/nfl/500/car.png',
-      'Chicago Bears': 'https://a.espncdn.com/i/teamlogos/nfl/500/chi.png',
-      'Cincinnati Bengals': 'https://a.espncdn.com/i/teamlogos/nfl/500/cin.png',
-      'Cleveland Browns': 'https://a.espncdn.com/i/teamlogos/nfl/500/cle.png',
-      'Dallas Cowboys': 'https://a.espncdn.com/i/teamlogos/nfl/500/dal.png',
-      'Denver Broncos': 'https://a.espncdn.com/i/teamlogos/nfl/500/den.png',
-      'Detroit Lions': 'https://a.espncdn.com/i/teamlogos/nfl/500/det.png',
-      'Green Bay Packers': 'https://a.espncdn.com/i/teamlogos/nfl/500/gb.png',
-      'Houston Texans': 'https://a.espncdn.com/i/teamlogos/nfl/500/hou.png',
-      'Indianapolis Colts': 'https://a.espncdn.com/i/teamlogos/nfl/500/ind.png',
-      'Jacksonville Jaguars': 'https://a.espncdn.com/i/teamlogos/nfl/500/jax.png',
-      'Kansas City Chiefs': 'https://a.espncdn.com/i/teamlogos/nfl/500/kc.png',
-      'Las Vegas Raiders': 'https://a.espncdn.com/i/teamlogos/nfl/500/lv.png',
-      'Los Angeles Chargers': 'https://a.espncdn.com/i/teamlogos/nfl/500/lac.png',
-      'Los Angeles Rams': 'https://a.espncdn.com/i/teamlogos/nfl/500/lar.png',
-      'Miami Dolphins': 'https://a.espncdn.com/i/teamlogos/nfl/500/mia.png',
-      'Minnesota Vikings': 'https://a.espncdn.com/i/teamlogos/nfl/500/min.png',
-      'New England Patriots': 'https://a.espncdn.com/i/teamlogos/nfl/500/ne.png',
-      'New Orleans Saints': 'https://a.espncdn.com/i/teamlogos/nfl/500/no.png',
-      'New York Giants': 'https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png',
-      'New York Jets': 'https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png',
-      'Philadelphia Eagles': 'https://a.espncdn.com/i/teamlogos/nfl/500/phi.png',
-      'Pittsburgh Steelers': 'https://a.espncdn.com/i/teamlogos/nfl/500/pit.png',
-      'San Francisco 49ers': 'https://a.espncdn.com/i/teamlogos/nfl/500/sf.png',
-      'Seattle Seahawks': 'https://a.espncdn.com/i/teamlogos/nfl/500/sea.png',
-      'Tampa Bay Buccaneers': 'https://a.espncdn.com/i/teamlogos/nfl/500/tb.png',
-      'Tennessee Titans': 'https://a.espncdn.com/i/teamlogos/nfl/500/ten.png',
-      'Washington Commanders': 'https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png'
+      'Atlanta Hawks': 'https://a.espncdn.com/i/teamlogos/nba/500/atl.png',
+      'Boston Celtics': 'https://a.espncdn.com/i/teamlogos/nba/500/bos.png',
+      'Brooklyn Nets': 'https://a.espncdn.com/i/teamlogos/nba/500/bkn.png',
+      'Charlotte Hornets': 'https://a.espncdn.com/i/teamlogos/nba/500/cha.png',
+      'Chicago Bulls': 'https://a.espncdn.com/i/teamlogos/nba/500/chi.png',
+      'Cleveland Cavaliers': 'https://a.espncdn.com/i/teamlogos/nba/500/cle.png',
+      'Dallas Mavericks': 'https://a.espncdn.com/i/teamlogos/nba/500/dal.png',
+      'Denver Nuggets': 'https://a.espncdn.com/i/teamlogos/nba/500/den.png',
+      'Detroit Pistons': 'https://a.espncdn.com/i/teamlogos/nba/500/det.png',
+      'Golden State Warriors': 'https://a.espncdn.com/i/teamlogos/nba/500/gs.png',
+      'Houston Rockets': 'https://a.espncdn.com/i/teamlogos/nba/500/hou.png',
+      'Indiana Pacers': 'https://a.espncdn.com/i/teamlogos/nba/500/ind.png',
+      'Los Angeles Clippers': 'https://a.espncdn.com/i/teamlogos/nba/500/lac.png',
+      'Los Angeles Lakers': 'https://a.espncdn.com/i/teamlogos/nba/500/lal.png',
+      'Memphis Grizzlies': 'https://a.espncdn.com/i/teamlogos/nba/500/mem.png',
+      'Miami Heat': 'https://a.espncdn.com/i/teamlogos/nba/500/mia.png',
+      'Milwaukee Bucks': 'https://a.espncdn.com/i/teamlogos/nba/500/mil.png',
+      'Minnesota Timberwolves': 'https://a.espncdn.com/i/teamlogos/nba/500/min.png',
+      'New Orleans Pelicans': 'https://a.espncdn.com/i/teamlogos/nba/500/no.png',
+      'New York Knicks': 'https://a.espncdn.com/i/teamlogos/nba/500/ny.png',
+      'Oklahoma City Thunder': 'https://a.espncdn.com/i/teamlogos/nba/500/okc.png',
+      'Orlando Magic': 'https://a.espncdn.com/i/teamlogos/nba/500/orl.png',
+      'Philadelphia 76ers': 'https://a.espncdn.com/i/teamlogos/nba/500/phi.png',
+      'Phoenix Suns': 'https://a.espncdn.com/i/teamlogos/nba/500/phx.png',
+      'Portland Trail Blazers': 'https://a.espncdn.com/i/teamlogos/nba/500/por.png',
+      'Sacramento Kings': 'https://a.espncdn.com/i/teamlogos/nba/500/sac.png',
+      'San Antonio Spurs': 'https://a.espncdn.com/i/teamlogos/nba/500/sa.png',
+      'Toronto Raptors': 'https://a.espncdn.com/i/teamlogos/nba/500/tor.png',
+      'Utah Jazz': 'https://a.espncdn.com/i/teamlogos/nba/500/utah.png',
+      'Washington Wizards': 'https://a.espncdn.com/i/teamlogos/nba/500/wsh.png'
     };
     return teamLogos[teamName] || '';
   };
 
   const getPlayerTeam = (playerName, homeTeam, awayTeam) => {
-    const playerTeamAbbr = playerTeamsData[playerName];
-    if (!playerTeamAbbr) return homeTeam; // Default to home team if not found
+    const playerTeamFull = nbaPlayerTeamsData[playerName];
+    if (!playerTeamFull) {
+      // Default to home team if not found
+      console.log(`⚠️ Player ${playerName} not found in team data, defaulting to ${homeTeam}`);
+      return homeTeam;
+    }
 
+    // Direct match with full team names
+    if (playerTeamFull === homeTeam) return homeTeam;
+    if (playerTeamFull === awayTeam) return awayTeam;
+
+    // Try matching with abbreviations as fallback
     const homeAbbr = getTeamAbbreviation(homeTeam);
     const awayAbbr = getTeamAbbreviation(awayTeam);
+    const playerTeamAbbr = getTeamAbbreviation(playerTeamFull);
 
-    // Match player's team to either home or away
     if (playerTeamAbbr === homeAbbr) return homeTeam;
     if (playerTeamAbbr === awayAbbr) return awayTeam;
 
-    // If player's team doesn't match either (shouldn't happen), default to home
+    // If player's team doesn't match either (player not in this game), default to home
+    console.log(`⚠️ Player ${playerName} team (${playerTeamFull}) doesn't match ${homeTeam} or ${awayTeam}`);
     return homeTeam;
   };
 
@@ -133,34 +139,30 @@ const PlayerPropsPage = () => {
   useEffect(() => {
     const getMarketDisplayName = (marketKey) => {
       const displayNames = {
-        player_pass_yds: 'Pass Yds',
-        player_pass_tds: 'Pass TDs',
-        player_pass_completions: 'Completions',
-        player_pass_attempts: 'Pass Att',
-        player_pass_interceptions: 'INTs',
-        player_pass_longest_completion: 'Long Pass',
-        player_rush_yds: 'Rush Yds',
-        player_rush_attempts: 'Rush Att',
-        player_rush_tds: 'Rush TDs',
-        player_rush_longest: 'Long Rush',
-        player_reception_yds: 'Rec Yds',
-        player_receptions: 'Receptions',
-        player_reception_tds: 'Rec TDs',
-        player_reception_longest: 'Long Rec',
-        player_anytime_td: 'Anytime TD'
+        player_points: 'Points',
+        player_rebounds: 'Rebounds',
+        player_assists: 'Assists',
+        player_threes: '3-Pointers',
+        player_blocks: 'Blocks',
+        player_steals: 'Steals',
+        player_turnovers: 'Turnovers',
+        player_points_rebounds_assists: 'PRA',
+        player_points_rebounds: 'Pts+Reb',
+        player_points_assists: 'Pts+Ast',
+        player_rebounds_assists: 'Reb+Ast'
       };
       return displayNames[marketKey] || marketKey;
     };
 
     const getPositionFromMarkets = (markets) => {
-      const hasPassingProps = markets.some(m => m.includes('pass'));
-      const hasRushingProps = markets.some(m => m.includes('rush'));
-      const hasReceivingProps = markets.some(m => m.includes('reception'));
+      const hasPointsProps = markets.some(m => m.includes('points'));
+      const hasReboundsProps = markets.some(m => m.includes('rebounds'));
+      const hasAssistsProps = markets.some(m => m.includes('assists'));
+      const hasBlocksProps = markets.some(m => m.includes('blocks'));
 
-      if (hasPassingProps && !hasReceivingProps) return 'QB';
-      if (hasRushingProps && !hasPassingProps && !hasReceivingProps) return 'RB';
-      if (hasRushingProps && hasReceivingProps) return 'RB';
-      if (hasReceivingProps && !hasRushingProps) return 'WR/TE';
+      if (hasAssistsProps && hasPointsProps && !hasReboundsProps && !hasBlocksProps) return 'Guard';
+      if (hasReboundsProps || hasBlocksProps) return 'Forward';
+      if (hasPointsProps || hasAssistsProps) return 'Guard';
       return 'Other';
     };
 
@@ -245,7 +247,7 @@ const PlayerPropsPage = () => {
           market.bestUnder = findBestOdds(market.underOdds, selectedBookmakers);
 
           // Use ML predictions to calculate probabilities
-          const propProbs = calculatePropProbability(player.name, market.market, market.line);
+          const propProbs = calculateNBAPropProbability(player.name, market.market, market.line);
 
           market.overEV = market.bestOver ? calculateEV(propProbs.overProb, market.bestOver.odds) : null;
           market.underEV = market.bestUnder ? calculateEV(propProbs.underProb, market.bestUnder.odds) : null;
@@ -256,9 +258,9 @@ const PlayerPropsPage = () => {
 
       // Group by position
       const byPosition = {
-        QB: [],
-        RB: [],
-        'WR/TE': [],
+        Guard: [],
+        Forward: [],
+        Center: [],
         Other: []
       };
 
@@ -272,7 +274,7 @@ const PlayerPropsPage = () => {
     const fetchPlayerProps = async () => {
       try {
         setLoading(true);
-        const response = await getPlayerProps(eventId);
+        const response = await getNBAPlayerProps(eventId);
         const data = response.data;
 
         if (data) {
@@ -478,7 +480,7 @@ const PlayerPropsPage = () => {
                       <button
                         onClick={() => {
                           setSelectedBookmakers([]);
-                          localStorage.removeItem('selectedBookmakers');
+                          localStorage.removeItem('nba_selectedBookmakers');
                         }}
                         style={{
                           padding: '4px 8px',
@@ -518,7 +520,7 @@ const PlayerPropsPage = () => {
                               ? selectedBookmakers.filter(b => b !== book)
                               : [...selectedBookmakers, book];
                             setSelectedBookmakers(updated);
-                            localStorage.setItem('selectedBookmakers', JSON.stringify(updated));
+                            localStorage.setItem('nba_selectedBookmakers', JSON.stringify(updated));
                           }}
                           style={{
                             marginRight: '8px',
@@ -850,4 +852,4 @@ const PlayerPropsPage = () => {
   );
 };
 
-export default PlayerPropsPage;
+export default NBAPlayerPropsPage;

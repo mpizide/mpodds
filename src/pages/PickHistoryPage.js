@@ -9,7 +9,7 @@ const PickHistoryPage = () => {
 
   // Load pick history from localStorage (merged with JSON file)
   useEffect(() => {
-    const savedHistory = localStorage.getItem('pickHistory');
+    const savedHistory = localStorage.getItem('pick_history');
     if (savedHistory) {
       try {
         const parsed = JSON.parse(savedHistory);
@@ -32,8 +32,12 @@ const PickHistoryPage = () => {
     inputBg: darkMode ? '#334155' : '#f1f5f9'
   };
 
-  // Group picks by week
-  const picksByWeek = pickHistory.reduce((acc, pick) => {
+  // Group picks by sport and then by week/date
+  const nflPicks = pickHistory.filter(p => p.sport === 'NFL');
+  const nbaPicks = pickHistory.filter(p => p.sport === 'NBA');
+
+  // Group NFL picks by week
+  const picksByWeek = nflPicks.reduce((acc, pick) => {
     const week = pick.week;
     if (!acc[week]) {
       acc[week] = [];
@@ -42,8 +46,19 @@ const PickHistoryPage = () => {
     return acc;
   }, {});
 
-  // Sort weeks in descending order
+  // Group NBA picks by date
+  const picksByDate = nbaPicks.reduce((acc, pick) => {
+    const date = pick.date;
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(pick);
+    return acc;
+  }, {});
+
+  // Sort weeks and dates in descending order
   const sortedWeeks = Object.keys(picksByWeek).sort((a, b) => b - a);
+  const sortedDates = Object.keys(picksByDate).sort((a, b) => new Date(b) - new Date(a));
 
   // Calculate overall stats
   const totalPicks = pickHistory.filter(p => p.result !== 'pending').length;
@@ -100,11 +115,19 @@ const PickHistoryPage = () => {
     return types[betType] || betType;
   };
 
-  const updatePickResult = (week, pickIndex, result) => {
+  const updatePickResult = (sport, weekOrDate, pickIndex, result) => {
     const updatedHistory = [...pickHistory];
-    const pickInHistory = updatedHistory.findIndex((p, idx) => {
-      return p.week === parseInt(week) && picksByWeek[week][pickIndex] === p;
-    });
+    let pickInHistory;
+
+    if (sport === 'NFL') {
+      pickInHistory = updatedHistory.findIndex((p, idx) => {
+        return p.sport === 'NFL' && p.week === parseInt(weekOrDate) && picksByWeek[weekOrDate][pickIndex] === p;
+      });
+    } else if (sport === 'NBA') {
+      pickInHistory = updatedHistory.findIndex((p, idx) => {
+        return p.sport === 'NBA' && p.date === weekOrDate && picksByDate[weekOrDate][pickIndex] === p;
+      });
+    }
 
     if (pickInHistory !== -1) {
       updatedHistory[pickInHistory].result = result;
@@ -121,7 +144,7 @@ const PickHistoryPage = () => {
       }
 
       setPickHistory(updatedHistory);
-      localStorage.setItem('pickHistory', JSON.stringify(updatedHistory));
+      localStorage.setItem('pick_history', JSON.stringify(updatedHistory));
     }
   };
 
@@ -238,8 +261,8 @@ const PickHistoryPage = () => {
           </div>
         </div>
 
-        {/* Pick History by Week */}
-        {sortedWeeks.length === 0 ? (
+        {/* Pick History */}
+        {sortedWeeks.length === 0 && sortedDates.length === 0 ? (
           <div style={{
             background: theme.cardBg,
             padding: '60px',
@@ -252,11 +275,238 @@ const PickHistoryPage = () => {
               No Picks Yet
             </h3>
             <p style={{ fontSize: '16px', color: theme.textSecondary }}>
-              Start tracking your top picks each week to see your performance over time!
+              Start tracking your top picks to see your performance over time!
             </p>
           </div>
         ) : (
-          sortedWeeks.map(week => (
+          <>
+            {/* NBA Picks by Date */}
+            {sortedDates.length > 0 && (
+              <>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  color: theme.text,
+                  marginBottom: '20px',
+                  marginTop: '20px'
+                }}>
+                  🏀 NBA Picks
+                </h2>
+                {sortedDates.map(date => (
+                  <div
+                    key={date}
+                    style={{
+                      background: theme.cardBg,
+                      padding: '30px',
+                      borderRadius: '16px',
+                      marginBottom: '20px',
+                      border: `1px solid ${theme.border}`
+                    }}
+                  >
+                    <h3 style={{
+                      fontSize: '20px',
+                      fontWeight: '700',
+                      color: theme.text,
+                      marginBottom: '20px'
+                    }}>
+                      {new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </h3>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                      {picksByDate[date].map((pick, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            background: theme.inputBg,
+                            padding: '20px',
+                            borderRadius: '12px',
+                            border: `2px solid ${getResultColor(pick.result)}`,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '15px'
+                          }}
+                        >
+                          {/* Pick Details */}
+                          <div style={{ flex: '1 1 300px' }}>
+                            <div style={{
+                              fontSize: '18px',
+                              fontWeight: '700',
+                              color: theme.text,
+                              marginBottom: '8px'
+                            }}>
+                              {pick.description}
+                            </div>
+                            <div style={{
+                              fontSize: '14px',
+                              color: theme.textSecondary,
+                              marginBottom: '4px'
+                            }}>
+                              {pick.matchup}
+                            </div>
+                            <div style={{
+                              fontSize: '13px',
+                              color: theme.textSecondary
+                            }}>
+                              {getBetTypeDisplay(pick.bet_type)} • {pick.odds > 0 ? '+' : ''}{pick.odds} • {pick.bookmaker}
+                            </div>
+                          </div>
+
+                          {/* EV & Stats */}
+                          <div style={{
+                            display: 'flex',
+                            gap: '20px',
+                            alignItems: 'center'
+                          }}>
+                            {pick.ev !== null && pick.ev !== undefined && (
+                              <div style={{ textAlign: 'center' }}>
+                                <div style={{
+                                  fontSize: '12px',
+                                  color: theme.textSecondary,
+                                  marginBottom: '4px'
+                                }}>
+                                  Expected Value
+                                </div>
+                                <div style={{
+                                  fontSize: '20px',
+                                  fontWeight: '700',
+                                  color: pick.ev >= 0 ? '#10b981' : '#ef4444'
+                                }}>
+                                  {pick.ev >= 0 ? '+' : ''}{pick.ev.toFixed(2)}%
+                                </div>
+                              </div>
+                            )}
+
+                            {pick.ml_prediction && (
+                              <div style={{ textAlign: 'center' }}>
+                                <div style={{
+                                  fontSize: '12px',
+                                  color: theme.textSecondary,
+                                  marginBottom: '4px'
+                                }}>
+                                  ML Prediction
+                                </div>
+                                <div style={{
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                  color: '#3b82f6'
+                                }}>
+                                  🤖 {pick.ml_prediction}%
+                                </div>
+                              </div>
+                            )}
+
+                            {pick.result !== 'pending' && (
+                              <div style={{ textAlign: 'center' }}>
+                                <div style={{
+                                  fontSize: '12px',
+                                  color: theme.textSecondary,
+                                  marginBottom: '4px'
+                                }}>
+                                  Units
+                                </div>
+                                <div style={{
+                                  fontSize: '20px',
+                                  fontWeight: '700',
+                                  color: calculateUnitsWon(pick) >= 0 ? '#10b981' : '#ef4444'
+                                }}>
+                                  {calculateUnitsWon(pick) >= 0 ? '+' : ''}{calculateUnitsWon(pick).toFixed(2)}u
+                                </div>
+                              </div>
+                            )}
+
+                            {pick.result === 'pending' ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <button
+                                  onClick={() => updatePickResult('NBA', date, idx, 'win')}
+                                  style={{
+                                    padding: '8px 16px',
+                                    background: '#10b981',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '13px'
+                                  }}
+                                >
+                                  ✓ Win
+                                </button>
+                                <button
+                                  onClick={() => updatePickResult('NBA', date, idx, 'loss')}
+                                  style={{
+                                    padding: '8px 16px',
+                                    background: '#ef4444',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '13px'
+                                  }}
+                                >
+                                  ✗ Loss
+                                </button>
+                                <button
+                                  onClick={() => updatePickResult('NBA', date, idx, 'push')}
+                                  style={{
+                                    padding: '8px 16px',
+                                    background: '#fbbf24',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '13px'
+                                  }}
+                                >
+                                  − Push
+                                </button>
+                              </div>
+                            ) : (
+                              <div style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                background: getResultColor(pick.result),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '36px',
+                                fontWeight: '700'
+                              }}>
+                                {getResultIcon(pick.result)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+
+            {/* NFL Picks by Week */}
+            {sortedWeeks.length > 0 && (
+              <>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  color: theme.text,
+                  marginBottom: '20px',
+                  marginTop: sortedDates.length > 0 ? '40px' : '20px'
+                }}>
+                  🏈 NFL Picks
+                </h2>
+                {sortedWeeks.map(week => (
             <div
               key={week}
               style={{
@@ -383,7 +633,7 @@ const PickHistoryPage = () => {
                       {pick.result === 'pending' ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           <button
-                            onClick={() => updatePickResult(week, idx, 'win')}
+                            onClick={() => updatePickResult('NFL', week, idx, 'win')}
                             style={{
                               padding: '8px 16px',
                               background: '#10b981',
@@ -398,7 +648,7 @@ const PickHistoryPage = () => {
                             ✓ Win
                           </button>
                           <button
-                            onClick={() => updatePickResult(week, idx, 'loss')}
+                            onClick={() => updatePickResult('NFL', week, idx, 'loss')}
                             style={{
                               padding: '8px 16px',
                               background: '#ef4444',
@@ -413,7 +663,7 @@ const PickHistoryPage = () => {
                             ✗ Loss
                           </button>
                           <button
-                            onClick={() => updatePickResult(week, idx, 'push')}
+                            onClick={() => updatePickResult('NFL', week, idx, 'push')}
                             style={{
                               padding: '8px 16px',
                               background: '#fbbf24',
@@ -449,8 +699,11 @@ const PickHistoryPage = () => {
                 ))}
               </div>
             </div>
-          ))
-        )}
+          ))}
+            </>
+          )}
+        </>
+      )}
       </div>
     </div>
   );

@@ -1,7 +1,9 @@
 [
   {
+    "sport": "NFL",
     "week": 6,
     "season": 2024,
+    "date": "2024-10-12",
     "description": "Jaguars +3.5",
     "matchup": "Jaguars vs Bears",
     "bet_type": "spread",
@@ -15,8 +17,10 @@
     "pick_rank": "potw"
   },
   {
+    "sport": "NFL",
     "week": 6,
     "season": 2024,
+    "date": "2024-10-12",
     "description": "Cowboys -1.5",
     "matchup": "Cowboys vs Jets",
     "bet_type": "spread",
