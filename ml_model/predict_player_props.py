@@ -72,8 +72,8 @@ for _, player in latest_player_stats.iterrows():
 
     predictions.append(player_pred)
 
-# Save predictions to JSON
-output_file = '../src/player_prop_predictions.json'
+# Save predictions to JSON (NFL-labeled)
+output_file = '../src/nfl_player_prop_predictions.json'
 with open(output_file, 'w') as f:
     json.dump(predictions, f, indent=2)
 

@@ -209,8 +209,9 @@ const PlayerPropsPage = () => {
               };
             }
 
+            // Find existing market by market type only (ignore line differences)
             let existingMarket = playerProps[playerName].markets.find(
-              m => m.market === marketKey && m.line === line
+              m => m.market === marketKey
             );
 
             if (!existingMarket) {
@@ -219,15 +220,21 @@ const PlayerPropsPage = () => {
                 marketName: getMarketDisplayName(marketKey),
                 line: line,
                 overOdds: [],
-                underOdds: []
+                underOdds: [],
+                lineData: {} // Track odds per line: { line: { overOdds: [], underOdds: [] } }
               };
               playerProps[playerName].markets.push(existingMarket);
             }
 
+            // Store odds grouped by line
+            if (!existingMarket.lineData[line]) {
+              existingMarket.lineData[line] = { overOdds: [], underOdds: [] };
+            }
+
             if (outcome.name === 'Over') {
-              existingMarket.overOdds.push({ odds: outcome.price, bookmaker: bookmaker.title });
+              existingMarket.lineData[line].overOdds.push({ odds: outcome.price, bookmaker: bookmaker.title });
             } else if (outcome.name === 'Under') {
-              existingMarket.underOdds.push({ odds: outcome.price, bookmaker: bookmaker.title });
+              existingMarket.lineData[line].underOdds.push({ odds: outcome.price, bookmaker: bookmaker.title });
             }
           });
         });
@@ -241,16 +248,53 @@ const PlayerPropsPage = () => {
         player.position = getPositionFromMarkets(marketKeys);
 
         player.markets.forEach(market => {
-          market.bestOver = findBestOdds(market.overOdds, selectedBookmakers);
-          market.bestUnder = findBestOdds(market.underOdds, selectedBookmakers);
+          // Pick the best line based on which has the best odds
+          let bestLine = null;
+          let bestLineEV = -Infinity;
 
-          // Use ML predictions to calculate probabilities
-          const propProbs = calculatePropProbability(player.name, market.market, market.line);
+          Object.entries(market.lineData).forEach(([line, data]) => {
+            const lineNum = parseFloat(line);
+            const bestOver = findBestOdds(data.overOdds, selectedBookmakers);
+            const bestUnder = findBestOdds(data.underOdds, selectedBookmakers);
 
-          market.overEV = market.bestOver ? calculateEV(propProbs.overProb, market.bestOver.odds) : null;
-          market.underEV = market.bestUnder ? calculateEV(propProbs.underProb, market.bestUnder.odds) : null;
-          market.bestEV = Math.max(market.overEV || -Infinity, market.underEV || -Infinity);
-          market.mlPrediction = propProbs.prediction; // Store ML prediction
+            // Calculate EV for this line
+            const propProbs = calculatePropProbability(player.name, market.market, lineNum);
+            const overEV = bestOver ? calculateEV(propProbs.overProb, bestOver.odds) : -Infinity;
+            const underEV = bestUnder ? calculateEV(propProbs.underProb, bestUnder.odds) : -Infinity;
+            const lineMaxEV = Math.max(overEV, underEV);
+
+            // Track the line with best EV
+            if (lineMaxEV > bestLineEV) {
+              bestLineEV = lineMaxEV;
+              bestLine = {
+                line: lineNum,
+                bestOver,
+                bestUnder,
+                overEV,
+                underEV,
+                prediction: propProbs.prediction
+              };
+            }
+          });
+
+          // Set the best line's data to the market
+          if (bestLine) {
+            market.line = bestLine.line;
+            market.bestOver = bestLine.bestOver;
+            market.bestUnder = bestLine.bestUnder;
+            market.overEV = bestLine.overEV;
+            market.underEV = bestLine.underEV;
+            market.bestEV = Math.max(bestLine.overEV || -Infinity, bestLine.underEV || -Infinity);
+            market.mlPrediction = bestLine.prediction;
+          } else {
+            // No valid line found
+            market.bestOver = null;
+            market.bestUnder = null;
+            market.overEV = null;
+            market.underEV = null;
+            market.bestEV = -Infinity;
+            market.mlPrediction = null;
+          }
         });
       });
 

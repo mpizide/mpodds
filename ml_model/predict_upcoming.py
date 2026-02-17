@@ -11,16 +11,14 @@ from datetime import datetime, timedelta
 import json
 
 print("Loading trained model...")
-model = joblib.load('ml_model/nfl_prediction_model.pkl')
-feature_columns = joblib.load('ml_model/feature_columns.pkl')
+model = joblib.load('nfl_prediction_model.pkl')
+feature_columns = joblib.load('feature_columns.pkl')
 
 print("Fetching current season data...")
-current_year = 2025
-# Also get 2024 data for team stats calculation
+current_year = 2024
+# Get 2024 season data
 games_2024 = nfl.import_schedules([2024])
-games_2025 = nfl.import_schedules([2025])
-# Combine for stats calculation
-games_all = pd.concat([games_2024, games_2025])
+games_all = games_2024
 
 # Calculate current team stats
 print("Calculating team statistics...")
@@ -111,11 +109,17 @@ for idx, game in upcoming_games.iterrows():
 predictions_df = pd.DataFrame(predictions)
 
 # Save predictions
-predictions_df.to_csv('ml_model/data/upcoming_predictions.csv', index=False)
+import os
+os.makedirs('data', exist_ok=True)
+predictions_df.to_csv('data/upcoming_predictions.csv', index=False)
 
 # Also save as JSON for easy loading in React
 predictions_json = predictions_df.to_dict('records')
-with open('ml_model/data/upcoming_predictions.json', 'w') as f:
+with open('data/upcoming_predictions.json', 'w') as f:
+    json.dump(predictions_json, f, indent=2)
+
+# Save to src folder for React app (NFL-labeled)
+with open('../src/nfl_ml_predictions.json', 'w') as f:
     json.dump(predictions_json, f, indent=2)
 
 print("\n" + "="*60)
@@ -135,6 +139,7 @@ for pred in predictions:
 
 print("\n" + "="*60)
 print("Files saved:")
-print("  - ml_model/data/upcoming_predictions.csv")
-print("  - ml_model/data/upcoming_predictions.json")
+print("  - data/upcoming_predictions.csv")
+print("  - data/upcoming_predictions.json")
+print("  - src/nfl_ml_predictions.json (for React app)")
 print("\nNext: Load predictions in your React app to auto-fill probabilities!")

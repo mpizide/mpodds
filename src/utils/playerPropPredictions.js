@@ -1,4 +1,4 @@
-import playerPropPredictions from '../player_prop_predictions.json';
+import playerPropPredictions from '../nfl_player_prop_predictions.json';
 
 // Map market keys to prediction keys
 const marketToPredictionMap = {

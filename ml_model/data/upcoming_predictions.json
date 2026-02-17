@@ -1,281 +1,11 @@
 [
   {
-    "game_id": "2025_06_PHI_NYG",
-    "gameday": "2025-10-09",
-    "home_team": "NYG",
-    "away_team": "PHI",
-    "home_win_prob": 37.1,
-    "away_win_prob": 62.9,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_DEN_NYJ",
-    "gameday": "2025-10-12",
-    "home_team": "NYJ",
-    "away_team": "DEN",
-    "home_win_prob": 37.0,
-    "away_win_prob": 63.0,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_LA_BAL",
-    "gameday": "2025-10-12",
-    "home_team": "BAL",
-    "away_team": "LA",
-    "home_win_prob": 41.8,
-    "away_win_prob": 58.2,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_DAL_CAR",
-    "gameday": "2025-10-12",
-    "home_team": "CAR",
-    "away_team": "DAL",
-    "home_win_prob": 41.3,
-    "away_win_prob": 58.7,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_ARI_IND",
-    "gameday": "2025-10-12",
-    "home_team": "IND",
-    "away_team": "ARI",
-    "home_win_prob": 72.5,
-    "away_win_prob": 27.5,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_SEA_JAX",
-    "gameday": "2025-10-12",
-    "home_team": "JAX",
-    "away_team": "SEA",
-    "home_win_prob": 46.6,
-    "away_win_prob": 53.4,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_LAC_MIA",
-    "gameday": "2025-10-12",
-    "home_team": "MIA",
-    "away_team": "LAC",
-    "home_win_prob": 45.7,
-    "away_win_prob": 54.3,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_NE_NO",
-    "gameday": "2025-10-12",
-    "home_team": "NO",
-    "away_team": "NE",
-    "home_win_prob": 36.0,
-    "away_win_prob": 64.0,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_CLE_PIT",
-    "gameday": "2025-10-12",
-    "home_team": "PIT",
-    "away_team": "CLE",
-    "home_win_prob": 61.7,
-    "away_win_prob": 38.3,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_TEN_LV",
-    "gameday": "2025-10-12",
-    "home_team": "LV",
-    "away_team": "TEN",
-    "home_win_prob": 53.2,
-    "away_win_prob": 46.8,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_CIN_GB",
-    "gameday": "2025-10-12",
-    "home_team": "GB",
-    "away_team": "CIN",
-    "home_win_prob": 67.9,
-    "away_win_prob": 32.1,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_SF_TB",
-    "gameday": "2025-10-12",
-    "home_team": "TB",
-    "away_team": "SF",
-    "home_win_prob": 54.8,
-    "away_win_prob": 45.2,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_DET_KC",
-    "gameday": "2025-10-12",
-    "home_team": "KC",
-    "away_team": "DET",
-    "home_win_prob": 35.0,
-    "away_win_prob": 65.0,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_BUF_ATL",
-    "gameday": "2025-10-13",
-    "home_team": "ATL",
-    "away_team": "BUF",
-    "home_win_prob": 36.6,
-    "away_win_prob": 63.4,
-    "week": 6
-  },
-  {
-    "game_id": "2025_06_CHI_WAS",
-    "gameday": "2025-10-13",
-    "home_team": "WAS",
-    "away_team": "CHI",
-    "home_win_prob": 61.1,
-    "away_win_prob": 38.9,
-    "week": 6
-  },
-  {
-    "game_id": "2025_07_PIT_CIN",
-    "gameday": "2025-10-16",
-    "home_team": "CIN",
-    "away_team": "PIT",
-    "home_win_prob": 36.8,
-    "away_win_prob": 63.2,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_LA_JAX",
-    "gameday": "2025-10-19",
-    "home_team": "JAX",
-    "away_team": "LA",
-    "home_win_prob": 54.5,
-    "away_win_prob": 45.5,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_NO_CHI",
-    "gameday": "2025-10-19",
-    "home_team": "CHI",
-    "away_team": "NO",
-    "home_win_prob": 59.6,
-    "away_win_prob": 40.4,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_MIA_CLE",
-    "gameday": "2025-10-19",
-    "home_team": "CLE",
-    "away_team": "MIA",
-    "home_win_prob": 44.5,
-    "away_win_prob": 55.5,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_LV_KC",
-    "gameday": "2025-10-19",
-    "home_team": "KC",
-    "away_team": "LV",
-    "home_win_prob": 65.9,
-    "away_win_prob": 34.1,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_PHI_MIN",
-    "gameday": "2025-10-19",
-    "home_team": "MIN",
-    "away_team": "PHI",
-    "home_win_prob": 55.5,
-    "away_win_prob": 44.5,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_CAR_NYJ",
-    "gameday": "2025-10-19",
-    "home_team": "NYJ",
-    "away_team": "CAR",
-    "home_win_prob": 46.3,
-    "away_win_prob": 53.7,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_NE_TEN",
-    "gameday": "2025-10-19",
-    "home_team": "TEN",
-    "away_team": "NE",
-    "home_win_prob": 30.1,
-    "away_win_prob": 69.9,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_NYG_DEN",
-    "gameday": "2025-10-19",
-    "home_team": "DEN",
-    "away_team": "NYG",
-    "home_win_prob": 69.8,
-    "away_win_prob": 30.2,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_IND_LAC",
-    "gameday": "2025-10-19",
-    "home_team": "LAC",
-    "away_team": "IND",
-    "home_win_prob": 34.0,
-    "away_win_prob": 66.0,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_GB_ARI",
-    "gameday": "2025-10-19",
-    "home_team": "ARI",
-    "away_team": "GB",
-    "home_win_prob": 52.8,
-    "away_win_prob": 47.2,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_WAS_DAL",
-    "gameday": "2025-10-19",
-    "home_team": "DAL",
-    "away_team": "WAS",
-    "home_win_prob": 46.2,
-    "away_win_prob": 53.8,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_ATL_SF",
-    "gameday": "2025-10-19",
-    "home_team": "SF",
-    "away_team": "ATL",
-    "home_win_prob": 56.3,
-    "away_win_prob": 43.7,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_TB_DET",
-    "gameday": "2025-10-20",
-    "home_team": "DET",
-    "away_team": "TB",
-    "home_win_prob": 66.5,
-    "away_win_prob": 33.5,
-    "week": 7
-  },
-  {
-    "game_id": "2025_07_HOU_SEA",
-    "gameday": "2025-10-20",
-    "home_team": "SEA",
-    "away_team": "HOU",
-    "home_win_prob": 59.6,
-    "away_win_prob": 40.4,
-    "week": 7
-  },
-  {
     "game_id": "2025_08_MIN_LAC",
     "gameday": "2025-10-23",
     "home_team": "LAC",
     "away_team": "MIN",
-    "home_win_prob": 47.4,
-    "away_win_prob": 52.6,
+    "home_win_prob": 42.9,
+    "away_win_prob": 57.1,
     "week": 8
   },
   {
@@ -283,8 +13,8 @@
     "gameday": "2025-10-26",
     "home_team": "ATL",
     "away_team": "MIA",
-    "home_win_prob": 55.6,
-    "away_win_prob": 44.4,
+    "home_win_prob": 56.1,
+    "away_win_prob": 43.9,
     "week": 8
   },
   {
@@ -292,8 +22,8 @@
     "gameday": "2025-10-26",
     "home_team": "BAL",
     "away_team": "CHI",
-    "home_win_prob": 46.1,
-    "away_win_prob": 53.9,
+    "home_win_prob": 38.6,
+    "away_win_prob": 61.4,
     "week": 8
   },
   {
@@ -301,8 +31,8 @@
     "gameday": "2025-10-26",
     "home_team": "CAR",
     "away_team": "BUF",
-    "home_win_prob": 36.6,
-    "away_win_prob": 63.4,
+    "home_win_prob": 50.7,
+    "away_win_prob": 49.3,
     "week": 8
   },
   {
@@ -310,8 +40,8 @@
     "gameday": "2025-10-26",
     "home_team": "CIN",
     "away_team": "NYJ",
-    "home_win_prob": 40.8,
-    "away_win_prob": 59.2,
+    "home_win_prob": 41.0,
+    "away_win_prob": 59.0,
     "week": 8
   },
   {
@@ -319,8 +49,8 @@
     "gameday": "2025-10-26",
     "home_team": "HOU",
     "away_team": "SF",
-    "home_win_prob": 64.3,
-    "away_win_prob": 35.7,
+    "home_win_prob": 66.0,
+    "away_win_prob": 34.0,
     "week": 8
   },
   {
@@ -328,8 +58,8 @@
     "gameday": "2025-10-26",
     "home_team": "NE",
     "away_team": "CLE",
-    "home_win_prob": 72.0,
-    "away_win_prob": 28.0,
+    "home_win_prob": 72.6,
+    "away_win_prob": 27.4,
     "week": 8
   },
   {
@@ -337,8 +67,8 @@
     "gameday": "2025-10-26",
     "home_team": "PHI",
     "away_team": "NYG",
-    "home_win_prob": 66.9,
-    "away_win_prob": 33.1,
+    "home_win_prob": 54.8,
+    "away_win_prob": 45.2,
     "week": 8
   },
   {
@@ -346,8 +76,8 @@
     "gameday": "2025-10-26",
     "home_team": "NO",
     "away_team": "TB",
-    "home_win_prob": 37.4,
-    "away_win_prob": 62.6,
+    "home_win_prob": 37.7,
+    "away_win_prob": 62.3,
     "week": 8
   },
   {
@@ -355,8 +85,8 @@
     "gameday": "2025-10-26",
     "home_team": "DEN",
     "away_team": "DAL",
-    "home_win_prob": 55.0,
-    "away_win_prob": 45.0,
+    "home_win_prob": 49.4,
+    "away_win_prob": 50.6,
     "week": 8
   },
   {
@@ -364,8 +94,8 @@
     "gameday": "2025-10-26",
     "home_team": "IND",
     "away_team": "TEN",
-    "home_win_prob": 83.2,
-    "away_win_prob": 16.8,
+    "home_win_prob": 83.6,
+    "away_win_prob": 16.4,
     "week": 8
   },
   {
@@ -373,8 +103,8 @@
     "gameday": "2025-10-26",
     "home_team": "PIT",
     "away_team": "GB",
-    "home_win_prob": 48.2,
-    "away_win_prob": 51.8,
+    "home_win_prob": 49.8,
+    "away_win_prob": 50.2,
     "week": 8
   },
   {
@@ -382,8 +112,8 @@
     "gameday": "2025-10-27",
     "home_team": "KC",
     "away_team": "WAS",
-    "home_win_prob": 46.5,
-    "away_win_prob": 53.5,
+    "home_win_prob": 66.4,
+    "away_win_prob": 33.6,
     "week": 8
   },
   {
@@ -391,8 +121,8 @@
     "gameday": "2025-10-30",
     "home_team": "MIA",
     "away_team": "BAL",
-    "home_win_prob": 44.0,
-    "away_win_prob": 56.0,
+    "home_win_prob": 53.2,
+    "away_win_prob": 46.8,
     "week": 9
   },
   {
@@ -400,8 +130,8 @@
     "gameday": "2025-11-02",
     "home_team": "CIN",
     "away_team": "CHI",
-    "home_win_prob": 35.2,
-    "away_win_prob": 64.8,
+    "home_win_prob": 30.8,
+    "away_win_prob": 69.2,
     "week": 9
   },
   {
@@ -409,8 +139,8 @@
     "gameday": "2025-11-02",
     "home_team": "DET",
     "away_team": "MIN",
-    "home_win_prob": 66.5,
-    "away_win_prob": 33.5,
+    "home_win_prob": 63.7,
+    "away_win_prob": 36.3,
     "week": 9
   },
   {
@@ -418,8 +148,8 @@
     "gameday": "2025-11-02",
     "home_team": "GB",
     "away_team": "CAR",
-    "home_win_prob": 60.0,
-    "away_win_prob": 40.0,
+    "home_win_prob": 57.7,
+    "away_win_prob": 42.3,
     "week": 9
   },
   {
@@ -427,8 +157,8 @@
     "gameday": "2025-11-02",
     "home_team": "HOU",
     "away_team": "DEN",
-    "home_win_prob": 59.8,
-    "away_win_prob": 40.2,
+    "home_win_prob": 60.5,
+    "away_win_prob": 39.5,
     "week": 9
   },
   {
@@ -436,8 +166,8 @@
     "gameday": "2025-11-02",
     "home_team": "NE",
     "away_team": "ATL",
-    "home_win_prob": 62.1,
-    "away_win_prob": 37.9,
+    "home_win_prob": 70.8,
+    "away_win_prob": 29.2,
     "week": 9
   },
   {
@@ -445,8 +175,8 @@
     "gameday": "2025-11-02",
     "home_team": "NYG",
     "away_team": "SF",
-    "home_win_prob": 43.0,
-    "away_win_prob": 57.0,
+    "home_win_prob": 54.6,
+    "away_win_prob": 45.4,
     "week": 9
   },
   {
@@ -454,8 +184,8 @@
     "gameday": "2025-11-02",
     "home_team": "PIT",
     "away_team": "IND",
-    "home_win_prob": 32.1,
-    "away_win_prob": 67.9,
+    "home_win_prob": 37.4,
+    "away_win_prob": 62.6,
     "week": 9
   },
   {
@@ -463,8 +193,8 @@
     "gameday": "2025-11-02",
     "home_team": "TEN",
     "away_team": "LAC",
-    "home_win_prob": 38.1,
-    "away_win_prob": 61.9,
+    "home_win_prob": 38.8,
+    "away_win_prob": 61.2,
     "week": 9
   },
   {
@@ -472,8 +202,8 @@
     "gameday": "2025-11-02",
     "home_team": "LA",
     "away_team": "NO",
-    "home_win_prob": 67.0,
-    "away_win_prob": 33.0,
+    "home_win_prob": 72.7,
+    "away_win_prob": 27.3,
     "week": 9
   },
   {
@@ -481,8 +211,8 @@
     "gameday": "2025-11-02",
     "home_team": "LV",
     "away_team": "JAX",
-    "home_win_prob": 35.3,
-    "away_win_prob": 64.7,
+    "home_win_prob": 40.5,
+    "away_win_prob": 59.5,
     "week": 9
   },
   {
@@ -490,8 +220,8 @@
     "gameday": "2025-11-02",
     "home_team": "BUF",
     "away_team": "KC",
-    "home_win_prob": 64.1,
-    "away_win_prob": 35.9,
+    "home_win_prob": 46.2,
+    "away_win_prob": 53.8,
     "week": 9
   },
   {
@@ -499,8 +229,8 @@
     "gameday": "2025-11-02",
     "home_team": "WAS",
     "away_team": "SEA",
-    "home_win_prob": 51.9,
-    "away_win_prob": 48.1,
+    "home_win_prob": 44.0,
+    "away_win_prob": 56.0,
     "week": 9
   },
   {
@@ -508,8 +238,8 @@
     "gameday": "2025-11-03",
     "home_team": "DAL",
     "away_team": "ARI",
-    "home_win_prob": 56.4,
-    "away_win_prob": 43.6,
+    "home_win_prob": 63.6,
+    "away_win_prob": 36.4,
     "week": 9
   },
   {
@@ -517,8 +247,8 @@
     "gameday": "2025-11-06",
     "home_team": "DEN",
     "away_team": "LV",
-    "home_win_prob": 73.1,
-    "away_win_prob": 26.9,
+    "home_win_prob": 75.2,
+    "away_win_prob": 24.8,
     "week": 10
   },
   {
@@ -526,8 +256,8 @@
     "gameday": "2025-11-09",
     "home_team": "IND",
     "away_team": "ATL",
-    "home_win_prob": 74.7,
-    "away_win_prob": 25.3,
+    "home_win_prob": 76.0,
+    "away_win_prob": 24.0,
     "week": 10
   },
   {
@@ -535,8 +265,8 @@
     "gameday": "2025-11-09",
     "home_team": "CAR",
     "away_team": "NO",
-    "home_win_prob": 58.6,
-    "away_win_prob": 41.4,
+    "home_win_prob": 67.1,
+    "away_win_prob": 32.9,
     "week": 10
   },
   {
@@ -544,8 +274,8 @@
     "gameday": "2025-11-09",
     "home_team": "CHI",
     "away_team": "NYG",
-    "home_win_prob": 61.5,
-    "away_win_prob": 38.5,
+    "home_win_prob": 56.6,
+    "away_win_prob": 43.4,
     "week": 10
   },
   {
@@ -553,8 +283,8 @@
     "gameday": "2025-11-09",
     "home_team": "HOU",
     "away_team": "JAX",
-    "home_win_prob": 61.1,
-    "away_win_prob": 38.9,
+    "home_win_prob": 70.1,
+    "away_win_prob": 29.9,
     "week": 10
   },
   {
@@ -562,8 +292,8 @@
     "gameday": "2025-11-09",
     "home_team": "MIA",
     "away_team": "BUF",
-    "home_win_prob": 32.9,
-    "away_win_prob": 67.1,
+    "home_win_prob": 39.5,
+    "away_win_prob": 60.5,
     "week": 10
   },
   {
@@ -571,8 +301,8 @@
     "gameday": "2025-11-09",
     "home_team": "MIN",
     "away_team": "BAL",
-    "home_win_prob": 60.6,
-    "away_win_prob": 39.4,
+    "home_win_prob": 66.1,
+    "away_win_prob": 33.9,
     "week": 10
   },
   {
@@ -580,8 +310,8 @@
     "gameday": "2025-11-09",
     "home_team": "NYJ",
     "away_team": "CLE",
-    "home_win_prob": 57.2,
-    "away_win_prob": 42.8,
+    "home_win_prob": 53.0,
+    "away_win_prob": 47.0,
     "week": 10
   },
   {
@@ -589,8 +319,8 @@
     "gameday": "2025-11-09",
     "home_team": "TB",
     "away_team": "NE",
-    "home_win_prob": 51.2,
-    "away_win_prob": 48.8,
+    "home_win_prob": 44.0,
+    "away_win_prob": 56.0,
     "week": 10
   },
   {
@@ -598,8 +328,8 @@
     "gameday": "2025-11-09",
     "home_team": "SEA",
     "away_team": "ARI",
-    "home_win_prob": 66.3,
-    "away_win_prob": 33.7,
+    "home_win_prob": 69.5,
+    "away_win_prob": 30.5,
     "week": 10
   },
   {
@@ -607,8 +337,8 @@
     "gameday": "2025-11-09",
     "home_team": "SF",
     "away_team": "LA",
-    "home_win_prob": 51.7,
-    "away_win_prob": 48.3,
+    "home_win_prob": 45.3,
+    "away_win_prob": 54.7,
     "week": 10
   },
   {
@@ -616,8 +346,8 @@
     "gameday": "2025-11-09",
     "home_team": "WAS",
     "away_team": "DET",
-    "home_win_prob": 44.6,
-    "away_win_prob": 55.4,
+    "home_win_prob": 44.3,
+    "away_win_prob": 55.7,
     "week": 10
   },
   {
@@ -625,8 +355,8 @@
     "gameday": "2025-11-09",
     "home_team": "LAC",
     "away_team": "PIT",
-    "home_win_prob": 56.1,
-    "away_win_prob": 43.9,
+    "home_win_prob": 45.3,
+    "away_win_prob": 54.7,
     "week": 10
   },
   {
@@ -634,8 +364,8 @@
     "gameday": "2025-11-10",
     "home_team": "GB",
     "away_team": "PHI",
-    "home_win_prob": 52.2,
-    "away_win_prob": 47.8,
+    "home_win_prob": 57.9,
+    "away_win_prob": 42.1,
     "week": 10
   },
   {
@@ -643,8 +373,8 @@
     "gameday": "2025-11-13",
     "home_team": "NE",
     "away_team": "NYJ",
-    "home_win_prob": 66.4,
-    "away_win_prob": 33.6,
+    "home_win_prob": 74.3,
+    "away_win_prob": 25.7,
     "week": 11
   },
   {
@@ -652,8 +382,8 @@
     "gameday": "2025-11-16",
     "home_team": "MIA",
     "away_team": "WAS",
-    "home_win_prob": 37.6,
-    "away_win_prob": 62.4,
+    "home_win_prob": 40.7,
+    "away_win_prob": 59.3,
     "week": 11
   },
   {
@@ -661,8 +391,8 @@
     "gameday": "2025-11-16",
     "home_team": "ATL",
     "away_team": "CAR",
-    "home_win_prob": 55.0,
-    "away_win_prob": 45.0,
+    "home_win_prob": 49.7,
+    "away_win_prob": 50.3,
     "week": 11
   },
   {
@@ -670,8 +400,8 @@
     "gameday": "2025-11-16",
     "home_team": "BUF",
     "away_team": "TB",
-    "home_win_prob": 62.3,
-    "away_win_prob": 37.7,
+    "home_win_prob": 59.9,
+    "away_win_prob": 40.1,
     "week": 11
   },
   {
@@ -679,8 +409,8 @@
     "gameday": "2025-11-16",
     "home_team": "JAX",
     "away_team": "LAC",
-    "home_win_prob": 62.8,
-    "away_win_prob": 37.2,
+    "home_win_prob": 54.0,
+    "away_win_prob": 46.0,
     "week": 11
   },
   {
@@ -688,8 +418,8 @@
     "gameday": "2025-11-16",
     "home_team": "MIN",
     "away_team": "CHI",
-    "home_win_prob": 60.9,
-    "away_win_prob": 39.1,
+    "home_win_prob": 56.2,
+    "away_win_prob": 43.8,
     "week": 11
   },
   {
@@ -697,8 +427,8 @@
     "gameday": "2025-11-16",
     "home_team": "NYG",
     "away_team": "GB",
-    "home_win_prob": 42.6,
-    "away_win_prob": 57.4,
+    "home_win_prob": 47.6,
+    "away_win_prob": 52.4,
     "week": 11
   },
   {
@@ -706,8 +436,8 @@
     "gameday": "2025-11-16",
     "home_team": "PIT",
     "away_team": "CIN",
-    "home_win_prob": 64.4,
-    "away_win_prob": 35.6,
+    "home_win_prob": 70.6,
+    "away_win_prob": 29.4,
     "week": 11
   },
   {
@@ -715,8 +445,8 @@
     "gameday": "2025-11-16",
     "home_team": "TEN",
     "away_team": "HOU",
-    "home_win_prob": 31.6,
-    "away_win_prob": 68.4,
+    "home_win_prob": 28.8,
+    "away_win_prob": 71.2,
     "week": 11
   },
   {
@@ -724,8 +454,8 @@
     "gameday": "2025-11-16",
     "home_team": "ARI",
     "away_team": "SF",
-    "home_win_prob": 55.9,
-    "away_win_prob": 44.1,
+    "home_win_prob": 53.3,
+    "away_win_prob": 46.7,
     "week": 11
   },
   {
@@ -733,8 +463,8 @@
     "gameday": "2025-11-16",
     "home_team": "LA",
     "away_team": "SEA",
-    "home_win_prob": 47.8,
-    "away_win_prob": 52.2,
+    "home_win_prob": 52.3,
+    "away_win_prob": 47.7,
     "week": 11
   },
   {
@@ -742,8 +472,8 @@
     "gameday": "2025-11-16",
     "home_team": "CLE",
     "away_team": "BAL",
-    "home_win_prob": 39.8,
-    "away_win_prob": 60.2,
+    "home_win_prob": 57.1,
+    "away_win_prob": 42.9,
     "week": 11
   },
   {
@@ -751,8 +481,8 @@
     "gameday": "2025-11-16",
     "home_team": "DEN",
     "away_team": "KC",
-    "home_win_prob": 61.1,
-    "away_win_prob": 38.9,
+    "home_win_prob": 46.2,
+    "away_win_prob": 53.8,
     "week": 11
   },
   {
@@ -760,8 +490,8 @@
     "gameday": "2025-11-16",
     "home_team": "PHI",
     "away_team": "DET",
-    "home_win_prob": 40.5,
-    "away_win_prob": 59.5,
+    "home_win_prob": 42.5,
+    "away_win_prob": 57.5,
     "week": 11
   },
   {
@@ -769,8 +499,8 @@
     "gameday": "2025-11-17",
     "home_team": "LV",
     "away_team": "DAL",
-    "home_win_prob": 33.7,
-    "away_win_prob": 66.3,
+    "home_win_prob": 26.0,
+    "away_win_prob": 74.0,
     "week": 11
   },
   {
@@ -778,8 +508,8 @@
     "gameday": "2025-11-20",
     "home_team": "HOU",
     "away_team": "BUF",
-    "home_win_prob": 53.9,
-    "away_win_prob": 46.1,
+    "home_win_prob": 60.0,
+    "away_win_prob": 40.0,
     "week": 12
   },
   {
@@ -787,8 +517,8 @@
     "gameday": "2025-11-23",
     "home_team": "BAL",
     "away_team": "NYJ",
-    "home_win_prob": 54.4,
-    "away_win_prob": 45.6,
+    "home_win_prob": 51.9,
+    "away_win_prob": 48.1,
     "week": 12
   },
   {
@@ -796,8 +526,8 @@
     "gameday": "2025-11-23",
     "home_team": "CHI",
     "away_team": "PIT",
-    "home_win_prob": 55.3,
-    "away_win_prob": 44.7,
+    "home_win_prob": 54.7,
+    "away_win_prob": 45.3,
     "week": 12
   },
   {
@@ -805,8 +535,8 @@
     "gameday": "2025-11-23",
     "home_team": "CIN",
     "away_team": "NE",
-    "home_win_prob": 32.2,
-    "away_win_prob": 67.8,
+    "home_win_prob": 25.8,
+    "away_win_prob": 74.2,
     "week": 12
   },
   {
@@ -814,8 +544,8 @@
     "gameday": "2025-11-23",
     "home_team": "DET",
     "away_team": "NYG",
-    "home_win_prob": 79.5,
-    "away_win_prob": 20.5,
+    "home_win_prob": 69.2,
+    "away_win_prob": 30.8,
     "week": 12
   },
   {
@@ -823,8 +553,8 @@
     "gameday": "2025-11-23",
     "home_team": "GB",
     "away_team": "MIN",
-    "home_win_prob": 51.9,
-    "away_win_prob": 48.1,
+    "home_win_prob": 57.6,
+    "away_win_prob": 42.4,
     "week": 12
   },
   {
@@ -832,8 +562,8 @@
     "gameday": "2025-11-23",
     "home_team": "KC",
     "away_team": "IND",
-    "home_win_prob": 38.1,
-    "away_win_prob": 61.9,
+    "home_win_prob": 55.7,
+    "away_win_prob": 44.3,
     "week": 12
   },
   {
@@ -841,8 +571,8 @@
     "gameday": "2025-11-23",
     "home_team": "TEN",
     "away_team": "SEA",
-    "home_win_prob": 27.2,
-    "away_win_prob": 72.8,
+    "home_win_prob": 24.7,
+    "away_win_prob": 75.3,
     "week": 12
   },
   {
@@ -850,8 +580,8 @@
     "gameday": "2025-11-23",
     "home_team": "ARI",
     "away_team": "JAX",
-    "home_win_prob": 52.7,
-    "away_win_prob": 47.3,
+    "home_win_prob": 58.1,
+    "away_win_prob": 41.9,
     "week": 12
   },
   {
@@ -859,8 +589,8 @@
     "gameday": "2025-11-23",
     "home_team": "LV",
     "away_team": "CLE",
-    "home_win_prob": 53.8,
-    "away_win_prob": 46.2,
+    "home_win_prob": 43.3,
+    "away_win_prob": 56.7,
     "week": 12
   },
   {
@@ -868,8 +598,8 @@
     "gameday": "2025-11-23",
     "home_team": "DAL",
     "away_team": "PHI",
-    "home_win_prob": 52.5,
-    "away_win_prob": 47.5,
+    "home_win_prob": 59.9,
+    "away_win_prob": 40.1,
     "week": 12
   },
   {
@@ -877,8 +607,8 @@
     "gameday": "2025-11-23",
     "home_team": "NO",
     "away_team": "ATL",
-    "home_win_prob": 45.4,
-    "away_win_prob": 54.6,
+    "home_win_prob": 47.1,
+    "away_win_prob": 52.9,
     "week": 12
   },
   {
@@ -886,8 +616,8 @@
     "gameday": "2025-11-23",
     "home_team": "LA",
     "away_team": "TB",
-    "home_win_prob": 55.4,
-    "away_win_prob": 44.6,
+    "home_win_prob": 62.7,
+    "away_win_prob": 37.3,
     "week": 12
   },
   {
@@ -895,8 +625,8 @@
     "gameday": "2025-11-24",
     "home_team": "SF",
     "away_team": "CAR",
-    "home_win_prob": 60.9,
-    "away_win_prob": 39.1,
+    "home_win_prob": 52.4,
+    "away_win_prob": 47.6,
     "week": 12
   },
   {
@@ -904,8 +634,8 @@
     "gameday": "2025-11-27",
     "home_team": "DET",
     "away_team": "GB",
-    "home_win_prob": 71.5,
-    "away_win_prob": 28.5,
+    "home_win_prob": 63.1,
+    "away_win_prob": 36.9,
     "week": 13
   },
   {
@@ -913,8 +643,8 @@
     "gameday": "2025-11-27",
     "home_team": "DAL",
     "away_team": "KC",
-    "home_win_prob": 56.0,
-    "away_win_prob": 44.0,
+    "home_win_prob": 47.5,
+    "away_win_prob": 52.5,
     "week": 13
   },
   {
@@ -922,8 +652,8 @@
     "gameday": "2025-11-27",
     "home_team": "BAL",
     "away_team": "CIN",
-    "home_win_prob": 62.6,
-    "away_win_prob": 37.4,
+    "home_win_prob": 58.4,
+    "away_win_prob": 41.6,
     "week": 13
   },
   {
@@ -931,8 +661,8 @@
     "gameday": "2025-11-28",
     "home_team": "PHI",
     "away_team": "CHI",
-    "home_win_prob": 59.9,
-    "away_win_prob": 40.1,
+    "home_win_prob": 53.4,
+    "away_win_prob": 46.6,
     "week": 13
   },
   {
@@ -940,8 +670,8 @@
     "gameday": "2025-11-30",
     "home_team": "CAR",
     "away_team": "LA",
-    "home_win_prob": 47.2,
-    "away_win_prob": 52.8,
+    "home_win_prob": 51.5,
+    "away_win_prob": 48.5,
     "week": 13
   },
   {
@@ -949,8 +679,8 @@
     "gameday": "2025-11-30",
     "home_team": "CLE",
     "away_team": "SF",
-    "home_win_prob": 41.8,
-    "away_win_prob": 58.2,
+    "home_win_prob": 52.8,
+    "away_win_prob": 47.2,
     "week": 13
   },
   {
@@ -958,8 +688,8 @@
     "gameday": "2025-11-30",
     "home_team": "IND",
     "away_team": "HOU",
-    "home_win_prob": 70.1,
-    "away_win_prob": 29.9,
+    "home_win_prob": 67.6,
+    "away_win_prob": 32.4,
     "week": 13
   },
   {
@@ -967,8 +697,8 @@
     "gameday": "2025-11-30",
     "home_team": "MIA",
     "away_team": "NO",
-    "home_win_prob": 55.7,
-    "away_win_prob": 44.3,
+    "home_win_prob": 57.5,
+    "away_win_prob": 42.5,
     "week": 13
   },
   {
@@ -976,8 +706,8 @@
     "gameday": "2025-11-30",
     "home_team": "NYJ",
     "away_team": "ATL",
-    "home_win_prob": 46.9,
-    "away_win_prob": 53.1,
+    "home_win_prob": 51.7,
+    "away_win_prob": 48.3,
     "week": 13
   },
   {
@@ -985,8 +715,8 @@
     "gameday": "2025-11-30",
     "home_team": "TB",
     "away_team": "ARI",
-    "home_win_prob": 58.8,
-    "away_win_prob": 41.2,
+    "home_win_prob": 58.6,
+    "away_win_prob": 41.4,
     "week": 13
   },
   {
@@ -994,8 +724,8 @@
     "gameday": "2025-11-30",
     "home_team": "TEN",
     "away_team": "JAX",
-    "home_win_prob": 33.7,
-    "away_win_prob": 66.3,
+    "home_win_prob": 41.3,
+    "away_win_prob": 58.7,
     "week": 13
   },
   {
@@ -1003,8 +733,8 @@
     "gameday": "2025-11-30",
     "home_team": "SEA",
     "away_team": "MIN",
-    "home_win_prob": 62.3,
-    "away_win_prob": 37.7,
+    "home_win_prob": 65.7,
+    "away_win_prob": 34.3,
     "week": 13
   },
   {
@@ -1012,8 +742,8 @@
     "gameday": "2025-11-30",
     "home_team": "LAC",
     "away_team": "LV",
-    "home_win_prob": 66.7,
-    "away_win_prob": 33.3,
+    "home_win_prob": 64.2,
+    "away_win_prob": 35.8,
     "week": 13
   },
   {
@@ -1021,8 +751,8 @@
     "gameday": "2025-11-30",
     "home_team": "PIT",
     "away_team": "BUF",
-    "home_win_prob": 39.6,
-    "away_win_prob": 60.4,
+    "home_win_prob": 51.9,
+    "away_win_prob": 48.1,
     "week": 13
   },
   {
@@ -1030,8 +760,8 @@
     "gameday": "2025-11-30",
     "home_team": "WAS",
     "away_team": "DEN",
-    "home_win_prob": 60.0,
-    "away_win_prob": 40.0,
+    "home_win_prob": 54.4,
+    "away_win_prob": 45.6,
     "week": 13
   },
   {
@@ -1039,8 +769,8 @@
     "gameday": "2025-12-01",
     "home_team": "NE",
     "away_team": "NYG",
-    "home_win_prob": 70.9,
-    "away_win_prob": 29.1,
+    "home_win_prob": 69.2,
+    "away_win_prob": 30.8,
     "week": 13
   },
   {
@@ -1048,8 +778,8 @@
     "gameday": "2025-12-04",
     "home_team": "DET",
     "away_team": "DAL",
-    "home_win_prob": 67.6,
-    "away_win_prob": 32.4,
+    "home_win_prob": 58.7,
+    "away_win_prob": 41.3,
     "week": 14
   },
   {
@@ -1057,8 +787,8 @@
     "gameday": "2025-12-07",
     "home_team": "ATL",
     "away_team": "SEA",
-    "home_win_prob": 41.4,
-    "away_win_prob": 58.6,
+    "home_win_prob": 40.8,
+    "away_win_prob": 59.2,
     "week": 14
   },
   {
@@ -1066,8 +796,8 @@
     "gameday": "2025-12-07",
     "home_team": "BAL",
     "away_team": "PIT",
-    "home_win_prob": 51.7,
-    "away_win_prob": 48.3,
+    "home_win_prob": 42.2,
+    "away_win_prob": 57.8,
     "week": 14
   },
   {
@@ -1075,8 +805,8 @@
     "gameday": "2025-12-07",
     "home_team": "CLE",
     "away_team": "TEN",
-    "home_win_prob": 57.9,
-    "away_win_prob": 42.1,
+    "home_win_prob": 68.3,
+    "away_win_prob": 31.7,
     "week": 14
   },
   {
@@ -1084,8 +814,8 @@
     "gameday": "2025-12-07",
     "home_team": "GB",
     "away_team": "CHI",
-    "home_win_prob": 57.6,
-    "away_win_prob": 42.4,
+    "home_win_prob": 58.9,
+    "away_win_prob": 41.1,
     "week": 14
   },
   {
@@ -1093,8 +823,8 @@
     "gameday": "2025-12-07",
     "home_team": "JAX",
     "away_team": "IND",
-    "home_win_prob": 42.9,
-    "away_win_prob": 57.1,
+    "home_win_prob": 31.8,
+    "away_win_prob": 68.2,
     "week": 14
   },
   {
@@ -1111,8 +841,8 @@
     "gameday": "2025-12-07",
     "home_team": "NYJ",
     "away_team": "MIA",
-    "home_win_prob": 51.2,
-    "away_win_prob": 48.8,
+    "home_win_prob": 52.6,
+    "away_win_prob": 47.4,
     "week": 14
   },
   {
@@ -1120,8 +850,8 @@
     "gameday": "2025-12-07",
     "home_team": "TB",
     "away_team": "NO",
-    "home_win_prob": 66.8,
-    "away_win_prob": 33.2,
+    "home_win_prob": 65.7,
+    "away_win_prob": 34.3,
     "week": 14
   },
   {
@@ -1129,8 +859,8 @@
     "gameday": "2025-12-07",
     "home_team": "LV",
     "away_team": "DEN",
-    "home_win_prob": 36.2,
-    "away_win_prob": 63.8,
+    "home_win_prob": 32.8,
+    "away_win_prob": 67.2,
     "week": 14
   },
   {
@@ -1138,8 +868,8 @@
     "gameday": "2025-12-07",
     "home_team": "ARI",
     "away_team": "LA",
-    "home_win_prob": 53.3,
-    "away_win_prob": 46.7,
+    "home_win_prob": 44.8,
+    "away_win_prob": 55.2,
     "week": 14
   },
   {
@@ -1147,8 +877,8 @@
     "gameday": "2025-12-07",
     "home_team": "BUF",
     "away_team": "CIN",
-    "home_win_prob": 78.7,
-    "away_win_prob": 21.3,
+    "home_win_prob": 76.4,
+    "away_win_prob": 23.6,
     "week": 14
   },
   {
@@ -1156,8 +886,8 @@
     "gameday": "2025-12-07",
     "home_team": "KC",
     "away_team": "HOU",
-    "home_win_prob": 52.3,
-    "away_win_prob": 47.7,
+    "home_win_prob": 68.1,
+    "away_win_prob": 31.9,
     "week": 14
   },
   {
@@ -1165,8 +895,8 @@
     "gameday": "2025-12-08",
     "home_team": "LAC",
     "away_team": "PHI",
-    "home_win_prob": 51.2,
-    "away_win_prob": 48.8,
+    "home_win_prob": 46.7,
+    "away_win_prob": 53.3,
     "week": 14
   },
   {
@@ -1174,8 +904,8 @@
     "gameday": "2025-12-11",
     "home_team": "TB",
     "away_team": "ATL",
-    "home_win_prob": 60.3,
-    "away_win_prob": 39.7,
+    "home_win_prob": 61.3,
+    "away_win_prob": 38.7,
     "week": 15
   },
   {
@@ -1183,8 +913,8 @@
     "gameday": "2025-12-14",
     "home_team": "CHI",
     "away_team": "CLE",
-    "home_win_prob": 67.2,
-    "away_win_prob": 32.8,
+    "home_win_prob": 65.1,
+    "away_win_prob": 34.9,
     "week": 15
   },
   {
@@ -1192,8 +922,8 @@
     "gameday": "2025-12-14",
     "home_team": "CIN",
     "away_team": "BAL",
-    "home_win_prob": 37.6,
-    "away_win_prob": 62.4,
+    "home_win_prob": 43.1,
+    "away_win_prob": 56.9,
     "week": 15
   },
   {
@@ -1201,8 +931,8 @@
     "gameday": "2025-12-14",
     "home_team": "HOU",
     "away_team": "ARI",
-    "home_win_prob": 67.9,
-    "away_win_prob": 32.1,
+    "home_win_prob": 69.5,
+    "away_win_prob": 30.5,
     "week": 15
   },
   {
@@ -1210,8 +940,8 @@
     "gameday": "2025-12-14",
     "home_team": "JAX",
     "away_team": "NYJ",
-    "home_win_prob": 67.4,
-    "away_win_prob": 32.6,
+    "home_win_prob": 59.3,
+    "away_win_prob": 40.7,
     "week": 15
   },
   {
@@ -1219,8 +949,8 @@
     "gameday": "2025-12-14",
     "home_team": "KC",
     "away_team": "LAC",
-    "home_win_prob": 60.2,
-    "away_win_prob": 39.8,
+    "home_win_prob": 77.6,
+    "away_win_prob": 22.4,
     "week": 15
   },
   {
@@ -1228,8 +958,8 @@
     "gameday": "2025-12-14",
     "home_team": "NE",
     "away_team": "BUF",
-    "home_win_prob": 50.6,
-    "away_win_prob": 49.4,
+    "home_win_prob": 63.2,
+    "away_win_prob": 36.8,
     "week": 15
   },
   {
@@ -1237,8 +967,8 @@
     "gameday": "2025-12-14",
     "home_team": "NYG",
     "away_team": "WAS",
-    "home_win_prob": 37.6,
-    "away_win_prob": 62.4,
+    "home_win_prob": 49.3,
+    "away_win_prob": 50.7,
     "week": 15
   },
   {
@@ -1246,8 +976,8 @@
     "gameday": "2025-12-14",
     "home_team": "PHI",
     "away_team": "LV",
-    "home_win_prob": 72.4,
-    "away_win_prob": 27.6,
+    "home_win_prob": 72.0,
+    "away_win_prob": 28.0,
     "week": 15
   },
   {
@@ -1255,8 +985,8 @@
     "gameday": "2025-12-14",
     "home_team": "DEN",
     "away_team": "GB",
-    "home_win_prob": 63.5,
-    "away_win_prob": 36.5,
+    "home_win_prob": 58.1,
+    "away_win_prob": 41.9,
     "week": 15
   },
   {
@@ -1264,8 +994,8 @@
     "gameday": "2025-12-14",
     "home_team": "LA",
     "away_team": "DET",
-    "home_win_prob": 42.3,
-    "away_win_prob": 57.7,
+    "home_win_prob": 54.3,
+    "away_win_prob": 45.7,
     "week": 15
   },
   {
@@ -1273,8 +1003,8 @@
     "gameday": "2025-12-14",
     "home_team": "NO",
     "away_team": "CAR",
-    "home_win_prob": 49.1,
-    "away_win_prob": 50.9,
+    "home_win_prob": 41.7,
+    "away_win_prob": 58.3,
     "week": 15
   },
   {
@@ -1282,8 +1012,8 @@
     "gameday": "2025-12-14",
     "home_team": "SEA",
     "away_team": "IND",
-    "home_win_prob": 50.1,
-    "away_win_prob": 49.9,
+    "home_win_prob": 51.4,
+    "away_win_prob": 48.6,
     "week": 15
   },
   {
@@ -1291,8 +1021,8 @@
     "gameday": "2025-12-14",
     "home_team": "SF",
     "away_team": "TEN",
-    "home_win_prob": 72.6,
-    "away_win_prob": 27.4,
+    "home_win_prob": 72.3,
+    "away_win_prob": 27.7,
     "week": 15
   },
   {
@@ -1300,8 +1030,8 @@
     "gameday": "2025-12-14",
     "home_team": "DAL",
     "away_team": "MIN",
-    "home_win_prob": 53.3,
-    "away_win_prob": 46.7,
+    "home_win_prob": 60.7,
+    "away_win_prob": 39.3,
     "week": 15
   },
   {
@@ -1309,8 +1039,8 @@
     "gameday": "2025-12-15",
     "home_team": "PIT",
     "away_team": "MIA",
-    "home_win_prob": 58.7,
-    "away_win_prob": 41.3,
+    "home_win_prob": 64.3,
+    "away_win_prob": 35.7,
     "week": 15
   },
   {
@@ -1318,8 +1048,8 @@
     "gameday": "2025-12-18",
     "home_team": "SEA",
     "away_team": "LA",
-    "home_win_prob": 64.6,
-    "away_win_prob": 35.4,
+    "home_win_prob": 62.5,
+    "away_win_prob": 37.5,
     "week": 16
   },
   {
@@ -1327,8 +1057,8 @@
     "gameday": "2025-12-19",
     "home_team": "CHI",
     "away_team": "GB",
-    "home_win_prob": 53.2,
-    "away_win_prob": 46.8,
+    "home_win_prob": 52.2,
+    "away_win_prob": 47.8,
     "week": 16
   },
   {
@@ -1336,8 +1066,8 @@
     "gameday": "2025-12-19",
     "home_team": "WAS",
     "away_team": "PHI",
-    "home_win_prob": 61.8,
-    "away_win_prob": 38.2,
+    "home_win_prob": 57.5,
+    "away_win_prob": 42.5,
     "week": 16
   },
   {
@@ -1345,8 +1075,8 @@
     "gameday": "2025-12-21",
     "home_team": "BAL",
     "away_team": "NE",
-    "home_win_prob": 45.1,
-    "away_win_prob": 54.9,
+    "home_win_prob": 35.2,
+    "away_win_prob": 64.8,
     "week": 16
   },
   {
@@ -1354,8 +1084,8 @@
     "gameday": "2025-12-21",
     "home_team": "CAR",
     "away_team": "TB",
-    "home_win_prob": 47.9,
-    "away_win_prob": 52.1,
+    "home_win_prob": 57.7,
+    "away_win_prob": 42.3,
     "week": 16
   },
   {
@@ -1363,8 +1093,8 @@
     "gameday": "2025-12-21",
     "home_team": "CLE",
     "away_team": "BUF",
-    "home_win_prob": 31.4,
-    "away_win_prob": 68.6,
+    "home_win_prob": 45.9,
+    "away_win_prob": 54.1,
     "week": 16
   },
   {
@@ -1372,8 +1102,8 @@
     "gameday": "2025-12-21",
     "home_team": "DAL",
     "away_team": "LAC",
-    "home_win_prob": 61.5,
-    "away_win_prob": 38.5,
+    "home_win_prob": 68.8,
+    "away_win_prob": 31.2,
     "week": 16
   },
   {
@@ -1381,8 +1111,8 @@
     "gameday": "2025-12-21",
     "home_team": "NO",
     "away_team": "NYJ",
-    "home_win_prob": 51.7,
-    "away_win_prob": 48.3,
+    "home_win_prob": 53.1,
+    "away_win_prob": 46.9,
     "week": 16
   },
   {
@@ -1390,8 +1120,8 @@
     "gameday": "2025-12-21",
     "home_team": "NYG",
     "away_team": "MIN",
-    "home_win_prob": 41.1,
-    "away_win_prob": 58.9,
+    "home_win_prob": 52.6,
+    "away_win_prob": 47.4,
     "week": 16
   },
   {
@@ -1399,8 +1129,8 @@
     "gameday": "2025-12-21",
     "home_team": "TEN",
     "away_team": "KC",
-    "home_win_prob": 37.4,
-    "away_win_prob": 62.6,
+    "home_win_prob": 24.0,
+    "away_win_prob": 76.0,
     "week": 16
   },
   {
@@ -1408,8 +1138,8 @@
     "gameday": "2025-12-21",
     "home_team": "ARI",
     "away_team": "ATL",
-    "home_win_prob": 60.1,
-    "away_win_prob": 39.9,
+    "home_win_prob": 58.8,
+    "away_win_prob": 41.2,
     "week": 16
   },
   {
@@ -1417,8 +1147,8 @@
     "gameday": "2025-12-21",
     "home_team": "DEN",
     "away_team": "JAX",
-    "home_win_prob": 61.5,
-    "away_win_prob": 38.5,
+    "home_win_prob": 69.6,
+    "away_win_prob": 30.4,
     "week": 16
   },
   {
@@ -1426,8 +1156,8 @@
     "gameday": "2025-12-21",
     "home_team": "DET",
     "away_team": "PIT",
-    "home_win_prob": 75.8,
-    "away_win_prob": 24.2,
+    "home_win_prob": 68.4,
+    "away_win_prob": 31.6,
     "week": 16
   },
   {
@@ -1435,8 +1165,8 @@
     "gameday": "2025-12-21",
     "home_team": "HOU",
     "away_team": "LV",
-    "home_win_prob": 77.5,
-    "away_win_prob": 22.5,
+    "home_win_prob": 80.0,
+    "away_win_prob": 20.0,
     "week": 16
   },
   {
@@ -1444,8 +1174,8 @@
     "gameday": "2025-12-21",
     "home_team": "MIA",
     "away_team": "CIN",
-    "home_win_prob": 61.8,
-    "away_win_prob": 38.2,
+    "home_win_prob": 63.5,
+    "away_win_prob": 36.5,
     "week": 16
   },
   {
@@ -1453,8 +1183,8 @@
     "gameday": "2025-12-22",
     "home_team": "IND",
     "away_team": "SF",
-    "home_win_prob": 75.7,
-    "away_win_prob": 24.3,
+    "home_win_prob": 76.1,
+    "away_win_prob": 23.9,
     "week": 16
   },
   {
@@ -1462,8 +1192,8 @@
     "gameday": "2025-12-25",
     "home_team": "WAS",
     "away_team": "DAL",
-    "home_win_prob": 60.0,
-    "away_win_prob": 40.0,
+    "home_win_prob": 49.1,
+    "away_win_prob": 50.9,
     "week": 17
   },
   {
@@ -1471,8 +1201,8 @@
     "gameday": "2025-12-25",
     "home_team": "MIN",
     "away_team": "DET",
-    "home_win_prob": 45.3,
-    "away_win_prob": 54.7,
+    "home_win_prob": 49.1,
+    "away_win_prob": 50.9,
     "week": 17
   },
   {
@@ -1480,8 +1210,8 @@
     "gameday": "2025-12-25",
     "home_team": "KC",
     "away_team": "DEN",
-    "home_win_prob": 53.6,
-    "away_win_prob": 46.4,
+    "home_win_prob": 71.2,
+    "away_win_prob": 28.8,
     "week": 17
   },
   {
@@ -1489,8 +1219,8 @@
     "gameday": "2025-12-28",
     "home_team": "CAR",
     "away_team": "SEA",
-    "home_win_prob": 41.8,
-    "away_win_prob": 58.2,
+    "home_win_prob": 48.6,
+    "away_win_prob": 51.4,
     "week": 17
   },
   {
@@ -1498,8 +1228,8 @@
     "gameday": "2025-12-28",
     "home_team": "CIN",
     "away_team": "ARI",
-    "home_win_prob": 40.1,
-    "away_win_prob": 59.9,
+    "home_win_prob": 39.5,
+    "away_win_prob": 60.5,
     "week": 17
   },
   {
@@ -1507,8 +1237,8 @@
     "gameday": "2025-12-28",
     "home_team": "CLE",
     "away_team": "PIT",
-    "home_win_prob": 45.7,
-    "away_win_prob": 54.3,
+    "home_win_prob": 50.6,
+    "away_win_prob": 49.4,
     "week": 17
   },
   {
@@ -1516,8 +1246,8 @@
     "gameday": "2025-12-28",
     "home_team": "GB",
     "away_team": "BAL",
-    "home_win_prob": 59.2,
-    "away_win_prob": 40.8,
+    "home_win_prob": 70.2,
+    "away_win_prob": 29.8,
     "week": 17
   },
   {
@@ -1525,8 +1255,8 @@
     "gameday": "2025-12-28",
     "home_team": "IND",
     "away_team": "JAX",
-    "home_win_prob": 72.7,
-    "away_win_prob": 27.3,
+    "home_win_prob": 79.0,
+    "away_win_prob": 21.0,
     "week": 17
   },
   {
@@ -1534,8 +1264,8 @@
     "gameday": "2025-12-28",
     "home_team": "LAC",
     "away_team": "HOU",
-    "home_win_prob": 51.8,
-    "away_win_prob": 48.2,
+    "home_win_prob": 43.8,
+    "away_win_prob": 56.2,
     "week": 17
   },
   {
@@ -1543,8 +1273,8 @@
     "gameday": "2025-12-28",
     "home_team": "LV",
     "away_team": "NYG",
-    "home_win_prob": 52.4,
-    "away_win_prob": 47.6,
+    "home_win_prob": 39.4,
+    "away_win_prob": 60.6,
     "week": 17
   },
   {
@@ -1552,8 +1282,8 @@
     "gameday": "2025-12-28",
     "home_team": "MIA",
     "away_team": "TB",
-    "home_win_prob": 44.0,
-    "away_win_prob": 56.0,
+    "home_win_prob": 46.5,
+    "away_win_prob": 53.5,
     "week": 17
   },
   {
@@ -1561,8 +1291,8 @@
     "gameday": "2025-12-28",
     "home_team": "NYJ",
     "away_team": "NE",
-    "home_win_prob": 41.5,
-    "away_win_prob": 58.5,
+    "home_win_prob": 38.2,
+    "away_win_prob": 61.8,
     "week": 17
   },
   {
@@ -1570,8 +1300,8 @@
     "gameday": "2025-12-28",
     "home_team": "TEN",
     "away_team": "NO",
-    "home_win_prob": 48.4,
-    "away_win_prob": 51.6,
+    "home_win_prob": 47.4,
+    "away_win_prob": 52.6,
     "week": 17
   },
   {
@@ -1579,8 +1309,8 @@
     "gameday": "2025-12-28",
     "home_team": "BUF",
     "away_team": "PHI",
-    "home_win_prob": 65.1,
-    "away_win_prob": 34.9,
+    "home_win_prob": 63.1,
+    "away_win_prob": 36.9,
     "week": 17
   },
   {
@@ -1588,8 +1318,8 @@
     "gameday": "2025-12-28",
     "home_team": "SF",
     "away_team": "CHI",
-    "home_win_prob": 58.8,
-    "away_win_prob": 41.2,
+    "home_win_prob": 53.9,
+    "away_win_prob": 46.1,
     "week": 17
   },
   {
@@ -1597,8 +1327,8 @@
     "gameday": "2025-12-29",
     "home_team": "ATL",
     "away_team": "LA",
-    "home_win_prob": 50.2,
-    "away_win_prob": 49.8,
+    "home_win_prob": 47.0,
+    "away_win_prob": 53.0,
     "week": 17
   },
   {
@@ -1606,8 +1336,8 @@
     "gameday": "2026-01-04",
     "home_team": "ATL",
     "away_team": "NO",
-    "home_win_prob": 63.2,
-    "away_win_prob": 36.8,
+    "home_win_prob": 64.8,
+    "away_win_prob": 35.2,
     "week": 18
   },
   {
@@ -1615,8 +1345,8 @@
     "gameday": "2026-01-04",
     "home_team": "BUF",
     "away_team": "NYJ",
-    "home_win_prob": 73.9,
-    "away_win_prob": 26.1,
+    "home_win_prob": 72.8,
+    "away_win_prob": 27.2,
     "week": 18
   },
   {
@@ -1624,8 +1354,8 @@
     "gameday": "2026-01-04",
     "home_team": "CHI",
     "away_team": "DET",
-    "home_win_prob": 36.6,
-    "away_win_prob": 63.4,
+    "home_win_prob": 46.1,
+    "away_win_prob": 53.9,
     "week": 18
   },
   {
@@ -1633,8 +1363,8 @@
     "gameday": "2026-01-04",
     "home_team": "CIN",
     "away_team": "CLE",
-    "home_win_prob": 53.0,
-    "away_win_prob": 47.0,
+    "home_win_prob": 44.4,
+    "away_win_prob": 55.6,
     "week": 18
   },
   {
@@ -1642,8 +1372,8 @@
     "gameday": "2026-01-04",
     "home_team": "DEN",
     "away_team": "LAC",
-    "home_win_prob": 68.1,
-    "away_win_prob": 31.9,
+    "home_win_prob": 69.4,
+    "away_win_prob": 30.6,
     "week": 18
   },
   {
@@ -1651,8 +1381,8 @@
     "gameday": "2026-01-04",
     "home_team": "HOU",
     "away_team": "IND",
-    "home_win_prob": 50.4,
-    "away_win_prob": 49.6,
+    "home_win_prob": 50.0,
+    "away_win_prob": 50.0,
     "week": 18
   },
   {
@@ -1660,8 +1390,8 @@
     "gameday": "2026-01-04",
     "home_team": "JAX",
     "away_team": "TEN",
-    "home_win_prob": 76.4,
-    "away_win_prob": 23.6,
+    "home_win_prob": 69.0,
+    "away_win_prob": 31.0,
     "week": 18
   },
   {
@@ -1669,8 +1399,8 @@
     "gameday": "2026-01-04",
     "home_team": "LA",
     "away_team": "ARI",
-    "home_win_prob": 63.1,
-    "away_win_prob": 36.9,
+    "home_win_prob": 70.0,
+    "away_win_prob": 30.0,
     "week": 18
   },
   {
@@ -1678,8 +1408,8 @@
     "gameday": "2026-01-04",
     "home_team": "LV",
     "away_team": "KC",
-    "home_win_prob": 41.3,
-    "away_win_prob": 58.7,
+    "home_win_prob": 25.1,
+    "away_win_prob": 74.9,
     "week": 18
   },
   {
@@ -1687,8 +1417,8 @@
     "gameday": "2026-01-04",
     "home_team": "MIN",
     "away_team": "GB",
-    "home_win_prob": 63.3,
-    "away_win_prob": 36.7,
+    "home_win_prob": 56.6,
+    "away_win_prob": 43.4,
     "week": 18
   },
   {
@@ -1696,8 +1426,8 @@
     "gameday": "2026-01-04",
     "home_team": "NE",
     "away_team": "MIA",
-    "home_win_prob": 69.4,
-    "away_win_prob": 30.6,
+    "home_win_prob": 74.6,
+    "away_win_prob": 25.4,
     "week": 18
   },
   {
@@ -1705,8 +1435,8 @@
     "gameday": "2026-01-04",
     "home_team": "NYG",
     "away_team": "DAL",
-    "home_win_prob": 40.4,
-    "away_win_prob": 59.6,
+    "home_win_prob": 45.3,
+    "away_win_prob": 54.7,
     "week": 18
   },
   {
@@ -1714,8 +1444,8 @@
     "gameday": "2026-01-04",
     "home_team": "PHI",
     "away_team": "WAS",
-    "home_win_prob": 54.5,
-    "away_win_prob": 45.5,
+    "home_win_prob": 52.7,
+    "away_win_prob": 47.3,
     "week": 18
   },
   {
@@ -1723,8 +1453,8 @@
     "gameday": "2026-01-04",
     "home_team": "PIT",
     "away_team": "BAL",
-    "home_win_prob": 53.5,
-    "away_win_prob": 46.5,
+    "home_win_prob": 67.3,
+    "away_win_prob": 32.7,
     "week": 18
   },
   {
@@ -1732,8 +1462,8 @@
     "gameday": "2026-01-04",
     "home_team": "SF",
     "away_team": "SEA",
-    "home_win_prob": 48.2,
-    "away_win_prob": 51.8,
+    "home_win_prob": 44.3,
+    "away_win_prob": 55.7,
     "week": 18
   },
   {
@@ -1741,8 +1471,8 @@
     "gameday": "2026-01-04",
     "home_team": "TB",
     "away_team": "CAR",
-    "home_win_prob": 63.9,
-    "away_win_prob": 36.1,
+    "home_win_prob": 56.1,
+    "away_win_prob": 43.9,
     "week": 18
   }
 ]

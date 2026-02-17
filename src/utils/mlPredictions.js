@@ -1,4 +1,4 @@
-import mlPredictionsAll from '../ml_predictions_all.json';
+import mlPredictionsAll from '../nfl_ml_predictions.json';
 
 // Map full team names to abbreviations used in ML predictions
 const teamNameToAbbrev = {
@@ -87,17 +87,17 @@ export const loadMLPredictions = (games) => {
         [`${homeTeam}_ml`]: prediction.home_win_prob.toString(),
         [`${awayTeam}_ml`]: prediction.away_win_prob.toString(),
 
-        // Spread predictions (use spread-specific probabilities)
-        [`${homeTeam}_spread`]: prediction.home_spread_prob.toString(),
-        [`${awayTeam}_spread`]: prediction.away_spread_prob.toString(),
+        // Spread predictions (use spread-specific probabilities if available, otherwise use win prob)
+        [`${homeTeam}_spread`]: prediction.home_spread_prob ? prediction.home_spread_prob.toString() : prediction.home_win_prob.toString(),
+        [`${awayTeam}_spread`]: prediction.away_spread_prob ? prediction.away_spread_prob.toString() : prediction.away_win_prob.toString(),
 
         // Totals predictions
         'over': overProb.toFixed(1),
         'under': underProb.toFixed(1),
 
-        // Store predicted values for reference
-        '_predicted_spread': prediction.predicted_spread,
-        '_predicted_total': prediction.predicted_total
+        // Store predicted values for reference (if available)
+        '_predicted_spread': prediction.predicted_spread || null,
+        '_predicted_total': prediction.predicted_total || null
       };
     }
   });

@@ -8,7 +8,11 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(ren:*)",
+      "Bash(move ml_predictions_all.json nfl_ml_predictions.json)",
+      "Bash(move player_prop_predictions.json nfl_player_prop_predictions.json)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
