@@ -8,6 +8,7 @@ const Navigation = () => {
     { path: '/', label: 'Home', icon: '🏠' },
     { path: '/nfl', label: 'NFL', icon: '🏈' },
     { path: '/nba', label: 'NBA', icon: '🏀' },
+    { path: '/cbb', label: 'College BB', icon: '🏀' },
     { path: '/cfb', label: 'College FB', icon: '🏟️' }
   ];
 
