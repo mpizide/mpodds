@@ -9,7 +9,8 @@ const Navigation = () => {
     { path: '/nfl', label: 'NFL', icon: '🏈' },
     { path: '/nba', label: 'NBA', icon: '🏀' },
     { path: '/cbb', label: 'College BB', icon: '🏀' },
-    { path: '/cfb', label: 'College FB', icon: '🏟️' }
+    { path: '/cfb', label: 'College FB', icon: '🏟️' },
+    { path: '/bracket', label: 'Bracket', icon: '🏆' }
   ];
 
   const isActive = (path) => location.pathname === path;

@@ -6,6 +6,7 @@ import NFLPage from './pages/NFLPage';
 import CFBPage from './pages/CFBPage';
 import NBAPage from './pages/NBAPage';
 import CBBPage from './pages/CBBPage';
+import BracketPage from './pages/BracketPage';
 import PlayerPropsPage from './pages/PlayerPropsPage';
 import NBAPlayerPropsPage from './pages/NBAPlayerPropsPage';
 import PickHistoryPage from './pages/PickHistoryPage';

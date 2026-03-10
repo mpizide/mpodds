@@ -214,28 +214,6 @@ const CBBPage = () => {
       const homeTeam = game.home_team;
       const awayTeam = game.away_team;
 
-      const homeBestML = findBestOdds(game.bookmakers, 'h2h', homeTeam);
-      const awayBestML = findBestOdds(game.bookmakers, 'h2h', awayTeam);
-      const homePredML = predictions[gameId]?.[`${homeTeam}_ml`];
-      const awayPredML = predictions[gameId]?.[`${awayTeam}_ml`];
-
-      if (homePredML && homeBestML) {
-        if (homeBestML.odds < 300) {
-          const ev = calculateEV(homePredML, homeBestML.odds, 'moneyline');
-          if (ev !== null) {
-            allBets.push({ gameId, type: 'ml', team: homeTeam, ev });
-          }
-        }
-      }
-      if (awayPredML && awayBestML) {
-        if (awayBestML.odds < 300) {
-          const ev = calculateEV(awayPredML, awayBestML.odds, 'moneyline');
-          if (ev !== null) {
-            allBets.push({ gameId, type: 'ml', team: awayTeam, ev });
-          }
-        }
-      }
-
       const homeBestSpread = findBestOdds(game.bookmakers, 'spreads', homeTeam);
       const awayBestSpread = findBestOdds(game.bookmakers, 'spreads', awayTeam);
       const homePredSpread = predictions[gameId]?.[`${homeTeam}_spread`];
@@ -288,7 +266,7 @@ const CBBPage = () => {
     for (const bet of rankedBets) {
       const gameKey = bet.gameId;
 
-      if (bet.type === 'spread' || bet.type === 'ml') {
+      if (bet.type === 'spread') {
         if (seenGames.has(gameKey)) {
           continue;
         }
@@ -304,7 +282,7 @@ const CBBPage = () => {
 
       topBets.push(bet);
 
-      if (bet.type === 'spread' || bet.type === 'ml') {
+      if (bet.type === 'spread') {
         seenGames.add(gameKey);
       }
 
@@ -1209,56 +1187,23 @@ const CBBPage = () => {
                             justifyContent: 'center',
                             position: 'relative'
                           }}>
-                            {isTopPickOfDay(game.id, 'ml', homeTeam) && (
-                              <>
-                                <div style={{
-                                  position: 'absolute',
-                                  top: '-8px',
-                                  right: '-8px',
-                                  width: '24px',
-                                  height: '24px',
-                                  borderRadius: '50%',
-                                  background: '#a855f7',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  color: 'white',
-                                  fontSize: '12px',
-                                  fontWeight: '700',
-                                  boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
-                                }}>
-                                  ★
-                                </div>
-                                <button
-                                  onClick={() => savePickOfDay(
-                                    game,
-                                    'ml',
-                                    homeTeam,
-                                    homeBestML.odds,
-                                    null,
-                                    homePredML,
-                                    homeEV_ML
-                                  )}
-                                  style={{
-                                    position: 'absolute',
-                                    top: '-8px',
-                                    left: '-8px',
-                                    padding: '4px 8px',
-                                    background: '#10b981',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '6px',
-                                    fontSize: '10px',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.5)',
-                                    zIndex: 10
-                                  }}
-                                  title="Save as Pick of Day"
-                                >
-                                  💾 Save
-                                </button>
-                              </>
+                            {homeEV_ML !== null && homeEV_ML >= 8 && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                padding: '2px 6px',
+                                background: '#b45309',
+                                border: '1px solid #f59e0b',
+                                borderRadius: '6px',
+                                fontSize: '9px',
+                                fontWeight: '700',
+                                color: '#fde68a',
+                                whiteSpace: 'nowrap',
+                                boxShadow: '0 1px 4px rgba(245,158,11,0.4)'
+                              }}>
+                                ⚡ High EV ML
+                              </div>
                             )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
@@ -1315,56 +1260,23 @@ const CBBPage = () => {
                             justifyContent: 'center',
                             position: 'relative'
                           }}>
-                            {isTopPickOfDay(game.id, 'ml', awayTeam) && (
-                              <>
-                                <div style={{
-                                  position: 'absolute',
-                                  top: '-8px',
-                                  right: '-8px',
-                                  width: '24px',
-                                  height: '24px',
-                                  borderRadius: '50%',
-                                  background: '#a855f7',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  color: 'white',
-                                  fontSize: '12px',
-                                  fontWeight: '700',
-                                  boxShadow: '0 2px 8px rgba(168, 85, 247, 0.5)'
-                                }}>
-                                  ★
-                                </div>
-                                <button
-                                  onClick={() => savePickOfDay(
-                                    game,
-                                    'ml',
-                                    awayTeam,
-                                    awayBestML.odds,
-                                    null,
-                                    awayPredML,
-                                    awayEV_ML
-                                  )}
-                                  style={{
-                                    position: 'absolute',
-                                    top: '-8px',
-                                    left: '-8px',
-                                    padding: '4px 8px',
-                                    background: '#10b981',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '6px',
-                                    fontSize: '10px',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.5)',
-                                    zIndex: 10
-                                  }}
-                                  title="Save as Pick of Day"
-                                >
-                                  💾 Save
-                                </button>
-                              </>
+                            {awayEV_ML !== null && awayEV_ML >= 8 && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-8px',
+                                right: '-8px',
+                                padding: '2px 6px',
+                                background: '#b45309',
+                                border: '1px solid #f59e0b',
+                                borderRadius: '6px',
+                                fontSize: '9px',
+                                fontWeight: '700',
+                                color: '#fde68a',
+                                whiteSpace: 'nowrap',
+                                boxShadow: '0 1px 4px rgba(245,158,11,0.4)'
+                              }}>
+                                ⚡ High EV ML
+                              </div>
                             )}
                             <div style={{ marginBottom: '6px' }}>
                               <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>
