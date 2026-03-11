@@ -290,6 +290,7 @@ export const getCBBTeamLogo = (teamName) => {
     'Howard Bison': 'https://a.espncdn.com/i/teamlogos/ncaa/500/47.png',
     'Morgan State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2415.png',
     'Morgan State Bears': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2415.png',
+    'Morgan St.': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2415.png',
     'Norfolk State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2452.png',
     'Norfolk State Spartans': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2452.png',
     'North Carolina A&T': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2448.png',
@@ -298,6 +299,7 @@ export const getCBBTeamLogo = (teamName) => {
     'Florida A&M': 'https://a.espncdn.com/i/teamlogos/ncaa/500/50.png',
     'Coppin State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2154.png',
     'Delaware State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2169.png',
+    'Delaware St.': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2169.png',
     'South Carolina State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2569.png',
     'Mississippi Valley State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2400.png',
     'Tennessee State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2634.png',
@@ -448,6 +450,20 @@ export const getCBBTeamLogo = (teamName) => {
     'Hampton Pirates': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2261.png',
     'Maryland Eastern Shore': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2379.png',
     'UMES': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2379.png',
+
+    // Patriot League
+    'Lehigh': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2329.png',
+    'Lehigh Mountain Hawks': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2329.png',
+    'Lafayette': 'https://a.espncdn.com/i/teamlogos/ncaa/500/322.png',
+    'Lafayette Leopards': 'https://a.espncdn.com/i/teamlogos/ncaa/500/322.png',
+    'Army': 'https://a.espncdn.com/i/teamlogos/ncaa/500/349.png',
+    'Army Black Knights': 'https://a.espncdn.com/i/teamlogos/ncaa/500/349.png',
+    'Bucknell': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2083.png',
+    'Bucknell Bison': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2083.png',
+    'Holy Cross': 'https://a.espncdn.com/i/teamlogos/ncaa/500/107.png',
+    'Holy Cross Crusaders': 'https://a.espncdn.com/i/teamlogos/ncaa/500/107.png',
+    'Loyola Maryland': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2352.png',
+    'Loyola Maryland Greyhounds': 'https://a.espncdn.com/i/teamlogos/ncaa/500/2352.png',
 
     // Sun Belt Conference
     'Georgia Southern': 'https://a.espncdn.com/i/teamlogos/ncaa/500/290.png',
@@ -820,6 +836,14 @@ export const getCBBTeamShortName = (teamName) => {
     'SE Louisiana': 'SELA', 'Southeastern Louisiana': 'SELA',
     // MEAC missing
     'Hampton': 'HAM', 'Maryland Eastern Shore': 'UMES',
+    // Patriot League
+    'Lehigh': 'LEH', 'Lehigh Mountain Hawks': 'LEH',
+    'Lafayette': 'LAF', 'Lafayette Leopards': 'LAF',
+    'Army': 'ARMY', 'Army Black Knights': 'ARMY',
+    'Bucknell': 'BUCK', 'Bucknell Bison': 'BUCK',
+    'Holy Cross': 'HC', 'Holy Cross Crusaders': 'HC',
+    'Loyola Maryland': 'LMD', 'Loyola Maryland Greyhounds': 'LMD',
+    'Colgate': 'COLG', 'Colgate Raiders': 'COLG',
 
 
     'Georgia State': 'GSU', 'Georgia State Panthers': 'GSU',

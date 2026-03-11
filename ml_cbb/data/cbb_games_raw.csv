@@ -6890,3 +6890,6 @@ season,date,home_team,away_team,home_score,away_score,is_neutral,is_conference,h
 2026,2026-03-08T20:30Z,Michigan Wolverines,Michigan State Spartans,90,80,False,True,MICH,MSU
 2026,2026-03-08T21:00Z,Nebraska Cornhuskers,Iowa Hawkeyes,84,75,False,True,NEB,IOWA
 2026,2026-03-08T19:00Z,Maryland Terrapins,Illinois Fighting Illini,72,78,False,True,MD,ILL
+2026,2026-03-10T01:00Z,Gonzaga Bulldogs,Oregon State Beavers,65,56,True,True,GONZ,ORST
+2026,2026-03-10T03:45Z,Saint Mary's Gaels,Santa Clara Broncos,71,76,True,True,SMC,SCU
+2026,2026-03-11T01:07Z,Gonzaga Bulldogs,Santa Clara Broncos,79,68,True,True,GONZ,SCU
