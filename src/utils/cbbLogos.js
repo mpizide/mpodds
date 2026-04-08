@@ -21,6 +21,7 @@ export const getCBBTeamLogo = (teamName) => {
     'Louisville Cardinals': 'https://a.espncdn.com/i/teamlogos/ncaa/500/97.png',
     'Florida State': 'https://a.espncdn.com/i/teamlogos/ncaa/500/52.png',
     'Florida State Seminoles': 'https://a.espncdn.com/i/teamlogos/ncaa/500/52.png',
+    'Florida St.': 'https://a.espncdn.com/i/teamlogos/ncaa/500/52.png',
     'Clemson': 'https://a.espncdn.com/i/teamlogos/ncaa/500/228.png',
     'Clemson Tigers': 'https://a.espncdn.com/i/teamlogos/ncaa/500/228.png',
     'Wake Forest': 'https://a.espncdn.com/i/teamlogos/ncaa/500/154.png',
