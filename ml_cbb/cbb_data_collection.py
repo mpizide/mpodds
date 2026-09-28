@@ -114,7 +114,8 @@ def calculate_team_stats_from_games(games_df):
 
 
 # Main execution
-CURRENT_SEASON = datetime.now().year if datetime.now().month >= 10 else datetime.now().year
+# Season is labeled by the year it ends: Nov 2026 - Apr 2027 is the 2027 season
+CURRENT_SEASON = datetime.now().year + 1 if datetime.now().month >= 8 else datetime.now().year
 RAW_CSV = "ml_cbb/data/cbb_games_raw.csv"
 
 if os.path.exists(RAW_CSV):
@@ -138,8 +139,9 @@ if os.path.exists(RAW_CSV):
         games_df = existing_df
         teams_df = calculate_team_stats_from_games(games_df)
 else:
-    print("First run -- collecting 3 seasons of history (2022-2025)...")
-    games_df, teams_df = fetch_cbb_alternative([2022, 2023, 2024, 2025])
+    history_seasons = list(range(CURRENT_SEASON - 3, CURRENT_SEASON + 1))
+    print("First run -- collecting seasons {}-{}...".format(history_seasons[0], history_seasons[-1]))
+    games_df, teams_df = fetch_cbb_alternative(history_seasons)
 
 print("=" * 70)
 print("SAVING DATA")

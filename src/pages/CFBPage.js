@@ -5,6 +5,7 @@ import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '..
 import { isTop25Game, getTeamRanking } from '../utils/top25Teams';
 import { getCFBTeamLogo, getCFBTeamShortName } from '../utils/cfbLogos';
 import { loadCFBMLPredictions } from '../utils/cfbMLPredictions';
+import { getCFBWeek, getFootballSeason } from '../utils/seasonDates';
 
 const CFBPage = () => {
   const navigate = useNavigate();
@@ -55,18 +56,11 @@ const CFBPage = () => {
   const getTeamShortName = getCFBTeamShortName;
 
   const groupGamesByWeek = (games) => {
-    // 2025 NFL Season starts September 4, 2025 (Week 1)
-    const CFB_START_DATE = new Date('2025-08-28T00:00:00'); // CFB starts earlier than NFL
-    const WEEK_DURATION = 7 * 24 * 60 * 60 * 1000;
-
     const gamesByWeek = {};
 
     games.forEach(game => {
-      const gameDate = new Date(game.commence_time);
-
-      // Calculate weeks since season start
-      const weeksSinceStart = Math.floor((gameDate - CFB_START_DATE) / WEEK_DURATION);
-      const weekNumber = weeksSinceStart + 1;
+      // Week 1 starts the Thursday before Labor Day, recalculated each season
+      const weekNumber = getCFBWeek(game.commence_time);
 
       // Ensure week numbers are reasonable (1-22 for regular season + playoffs)
       if (weekNumber > 0 && weekNumber <= 22) {
@@ -536,12 +530,12 @@ const CFBPage = () => {
       }
 
       // Add new picks
-      const currentYear = new Date().getFullYear();
+      const currentSeason = getFootballSeason();
 
       topBets.forEach((bet, index) => {
         const pick = {
           week: selectedWeek,
-          season: currentYear,
+          season: currentSeason,
           description: bet.description,
           matchup: bet.matchup,
           bet_type: bet.type,

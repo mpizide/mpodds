@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import pickHistoryJson from '../pick_history.json';
+import { getFootballSeason } from '../utils/seasonDates';
 
 const PickHistoryPage = () => {
   const navigate = useNavigate();
@@ -36,13 +37,14 @@ const PickHistoryPage = () => {
   const nflPicks = pickHistory.filter(p => p.sport === 'NFL');
   const nbaPicks = pickHistory.filter(p => p.sport === 'NBA');
 
-  // Group NFL picks by week
+  // Group NFL picks by season + week so Week 6 of different seasons stays separate
+  const getPickSeason = (pick) => pick.season || getFootballSeason(pick.date || new Date());
   const picksByWeek = nflPicks.reduce((acc, pick) => {
-    const week = pick.week;
-    if (!acc[week]) {
-      acc[week] = [];
+    const key = `${getPickSeason(pick)}-${pick.week}`;
+    if (!acc[key]) {
+      acc[key] = [];
     }
-    acc[week].push(pick);
+    acc[key].push(pick);
     return acc;
   }, {});
 
@@ -57,7 +59,11 @@ const PickHistoryPage = () => {
   }, {});
 
   // Sort weeks and dates in descending order
-  const sortedWeeks = Object.keys(picksByWeek).sort((a, b) => b - a);
+  const sortedWeeks = Object.keys(picksByWeek).sort((a, b) => {
+    const [seasonA, weekA] = a.split('-').map(Number);
+    const [seasonB, weekB] = b.split('-').map(Number);
+    return seasonB - seasonA || weekB - weekA;
+  });
   const sortedDates = Object.keys(picksByDate).sort((a, b) => new Date(b) - new Date(a));
 
   // Calculate overall stats
@@ -121,7 +127,7 @@ const PickHistoryPage = () => {
 
     if (sport === 'NFL') {
       pickInHistory = updatedHistory.findIndex((p, idx) => {
-        return p.sport === 'NFL' && p.week === parseInt(weekOrDate) && picksByWeek[weekOrDate][pickIndex] === p;
+        return p.sport === 'NFL' && picksByWeek[weekOrDate][pickIndex] === p;
       });
     } else if (sport === 'NBA') {
       pickInHistory = updatedHistory.findIndex((p, idx) => {
@@ -523,7 +529,7 @@ const PickHistoryPage = () => {
                 color: theme.text,
                 marginBottom: '20px'
               }}>
-                Week {week} - 2025
+                Week {picksByWeek[week][0].week} - {week.split('-')[0]}
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>

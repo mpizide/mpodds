@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getNBAOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
 import { loadNBAMLPredictions } from '../utils/nbaMLPredictions';
+import { getBasketballSeason } from '../utils/seasonDates';
 
 const NBAPage = () => {
   const navigate = useNavigate();
@@ -442,7 +443,7 @@ const NBAPage = () => {
       const newPick = {
         sport: 'NBA',
         date: gameDate.toISOString().split('T')[0],
-        season: 2024, // You can make this dynamic based on current season
+        season: getBasketballSeason(gameDate),
         description: description,
         matchup: matchup,
         bet_type: type === 'ml' ? 'moneyline' : type,

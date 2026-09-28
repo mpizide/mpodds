@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getNFLOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
 import { loadMLPredictions } from '../utils/mlPredictions';
+import { getNFLWeek, getFootballSeason } from '../utils/seasonDates';
 
 const NFLPage = () => {
   const navigate = useNavigate();
@@ -125,21 +126,14 @@ const NFLPage = () => {
   };
 
   const groupGamesByWeek = (games) => {
-    // 2025 NFL Season starts September 4, 2025 (Week 1)
-    const NFL_START_DATE = new Date('2025-09-04T00:00:00');
-    const WEEK_DURATION = 7 * 24 * 60 * 60 * 1000;
-
     const gamesByWeek = {};
 
     games.forEach(game => {
-      const gameDate = new Date(game.commence_time);
+      // Week 1 starts the Thursday after Labor Day, recalculated each season
+      const weekNumber = getNFLWeek(game.commence_time);
 
-      // Calculate weeks since season start
-      const weeksSinceStart = Math.floor((gameDate - NFL_START_DATE) / WEEK_DURATION);
-      const weekNumber = weeksSinceStart + 1;
-
-      // Ensure week numbers are reasonable (1-22 for regular season + playoffs)
-      if (weekNumber > 0 && weekNumber <= 22) {
+      // 18 regular season weeks + playoffs (Super Bowl lands in week 23 after the bye)
+      if (weekNumber > 0 && weekNumber <= 23) {
         if (!gamesByWeek[weekNumber]) {
           gamesByWeek[weekNumber] = [];
         }
@@ -587,12 +581,12 @@ const NFLPage = () => {
       }
 
       // Add new picks
-      const currentYear = new Date().getFullYear();
+      const currentSeason = getFootballSeason();
 
       topBets.forEach((bet, index) => {
         const pick = {
           week: selectedWeek,
-          season: currentYear,
+          season: currentSeason,
           description: bet.description,
           matchup: bet.matchup,
           bet_type: bet.type,

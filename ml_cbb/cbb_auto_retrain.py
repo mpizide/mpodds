@@ -74,7 +74,8 @@ def fetch_recent_completed_games(days_back=7):
 
                                 game_data = {
                                     'date': event['date'],
-                                    'season': 2025,
+                                    # Season is labeled by the year it ends (Nov 2026 -> 2027)
+                                    'season': date.year + 1 if date.month >= 8 else date.year,
                                     'home_team': home_team['team']['displayName'],
                                     'away_team': away_team['team']['displayName'],
                                     'home_score': int(home_team['score']),

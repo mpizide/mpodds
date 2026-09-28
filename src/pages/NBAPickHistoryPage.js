@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getBasketballSeason } from '../utils/seasonDates';
 
 const NBAPickHistoryPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const NBAPickHistoryPage = () => {
       const initialPick = {
         sport: 'NBA',
         date: new Date().toISOString().split('T')[0],
-        season: 2024,
+        season: getBasketballSeason(),
         description: 'Bucks -10',
         matchup: 'Bucks @ Hawks',
         bet_type: 'spread',

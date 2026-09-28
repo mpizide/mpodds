@@ -4,6 +4,7 @@ import { getCBBOdds } from '../services/oddsAPI';
 import { calculateEV, findBestOdds, americanToImplied, findBestTotals } from '../utils/oddsCalculations';
 import { loadCBBMLPredictions } from '../utils/cbbMLPredictions';
 import { getCBBTeamLogo, getCBBTeamShortName } from '../utils/cbbLogos';
+import { getBasketballSeason } from '../utils/seasonDates';
 
 const CBBPage = () => {
   const navigate = useNavigate();
@@ -352,7 +353,7 @@ const CBBPage = () => {
       const newPick = {
         sport: 'CBB',
         date: gameDate.toISOString().split('T')[0],
-        season: 2025, // 2024-2025 season
+        season: getBasketballSeason(gameDate),
         description: description,
         matchup: matchup,
         bet_type: type === 'ml' ? 'moneyline' : type,
