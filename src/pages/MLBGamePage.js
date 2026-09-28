@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getMLBOdds } from '../services/oddsAPI';
+import { getMLBOdds, getMLBPlayerProps } from '../services/oddsAPI';
+import { evaluateMLBProps } from '../utils/mlbProps';
 import {
   getScheduleForOddsGames,
   matchScheduleGame,
@@ -16,6 +17,7 @@ import {
   findMLBPrediction,
   getMLBGameLines,
   computeMLBProbabilities,
+  marketMLBProbabilities,
   MLB_MODEL_INFO
 } from '../utils/mlbMLPredictions';
 import { getMLBTeamLogo, getMLBTeamAbbr, getPlayerHeadshot } from '../utils/mlbTeams';
@@ -57,6 +59,8 @@ const MLBGamePage = () => {
   const [players, setPlayers] = useState({});
   const [savant, setSavant] = useState(null);
   const [selected, setSelected] = useState(null); // { id, type: 'batter' | 'pitcher' }
+  const [propsEvent, setPropsEvent] = useState(null);
+  const [propsError, setPropsError] = useState(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -89,6 +93,15 @@ const MLBGamePage = () => {
         match?.teams.home.probablePitcher?.id
       ];
       setPlayers(await getPlayers(ids, season));
+
+      // Player props are an extra: the page still works if they fail or aren't posted yet
+      try {
+        const props = await getMLBPlayerProps(eventId);
+        setPropsEvent(props.data);
+        setPropsError(null);
+      } catch (err) {
+        setPropsError('Player props unavailable right now.');
+      }
       setError(null);
     } catch (err) {
       console.error('Error loading MLB game:', err);
@@ -161,6 +174,40 @@ const MLBGamePage = () => {
   const homeTeam = game.home_team;
   const awayPitcher = scheduleGame?.teams.away.probablePitcher;
   const homePitcher = scheduleGame?.teams.home.probablePitcher;
+
+  // Implied team run totals from the game odds (market total split by the market win probability;
+  // ~10 runs of margin per 100% win probability matches MLB run-differential/win-rate data)
+  const gameLines = getMLBGameLines(game || { bookmakers: [], home_team: '', away_team: '' });
+  const gameMarket = game ? marketMLBProbabilities(game, gameLines) : {};
+  const teamTotals = {};
+  if (gameLines.over?.points && gameMarket.mlHome !== null && gameMarket.mlHome !== undefined) {
+    const margin = 10 * (gameMarket.mlHome / 100 - 0.5);
+    teamTotals.home = gameLines.over.points / 2 + margin / 2;
+    teamTotals.away = gameLines.over.points / 2 - margin / 2;
+  }
+  const propEval = propsEvent
+    ? evaluateMLBProps(propsEvent, lineups, players, { away: awayPitcher?.id, home: homePitcher?.id }, teamTotals)
+    : { byPlayerId: {}, highlights: { away: null, home: null }, projections: {} };
+  const fmtEV = (ev) => (ev === null ? '—' : `${ev > 0 ? '+' : ''}${ev.toFixed(1)}%`);
+  const propLabel = (r) => `${r.side === 'Over' ? 'O' : 'U'} ${r.line} ${r.short}`;
+
+  const renderPropPill = (highlight, compact = false) => {
+    const r = highlight.prop;
+    const color = r.agree ? '#22c55e' : '#f59e0b';
+    return (
+      <span
+        title={r.agree
+          ? 'Market fair odds AND the stat projection both say this price is +EV'
+          : 'Best prop on this team, but the market and projection do not both show +EV'}
+        style={{
+          marginLeft: compact ? '6px' : 0, padding: '1px 7px', borderRadius: '999px', fontSize: '10px', fontWeight: '800',
+          background: `${color}22`, color, border: `1px solid ${color}88`, whiteSpace: 'nowrap'
+        }}
+      >
+        {r.agree ? '💎 VALUE' : '👀 LEAN'}{!compact && ` ${propLabel(r)} ${fmtOdds(r.best.odds)}`}
+      </span>
+    );
+  };
 
   const fmtOdds = (o) => (o > 0 ? `+${o}` : `${o}`);
 
@@ -365,7 +412,7 @@ const MLBGamePage = () => {
     );
   };
 
-  const renderLineup = (team, lineup, opposingPitcher) => {
+  const renderLineup = (team, lineup, opposingPitcher, side) => {
     const pitchHand = opposingPitcher ? players[opposingPitcher.id]?.pitchHand : null;
     const batterRows = (lineup?.players || []).map(p => ({
       player: p,
@@ -439,6 +486,7 @@ const MLBGamePage = () => {
                       <div style={{ minWidth: 0 }}>
                         <div style={{ fontSize: '14px', fontWeight: '700', color: theme.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {player.fullName}
+                          {propEval.highlights[side]?.playerId === player.id && renderPropPill(propEval.highlights[side], true)}
                           {edge && (
                             <span title={`Platoon edge vs ${pitchHand}HP`} style={{ marginLeft: '6px', fontSize: '10px', color: '#22c55e', fontWeight: '700' }}>
                               ▲ vs {pitchHand}HP
@@ -465,6 +513,67 @@ const MLBGamePage = () => {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderPlayerProps = (playerId) => {
+    const rows = propEval.byPlayerId[playerId] || [];
+    const projection = propEval.projections[playerId];
+    return (
+      <div style={{ marginBottom: '20px' }}>
+        <div style={{ fontSize: '16px', fontWeight: '800', color: theme.text, marginBottom: '6px' }}>🎯 Today's Props</div>
+        {projection && (
+          <div style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '10px' }}>
+            Projection (~{projection.paExp.toFixed(1)} PA): {projection.expected.hits.toFixed(2)} H ·{' '}
+            {projection.expected.hr.toFixed(2)} HR · {projection.expected.rbi.toFixed(2)} RBI
+          </div>
+        )}
+        {rows.length === 0 ? (
+          <div style={{ fontSize: '13px', color: theme.textSecondary, padding: '8px 0' }}>
+            {propsEvent ? 'No hits / HR / RBI props posted for this player yet.' : propsError || 'Loading props...'}
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', color: theme.text, minWidth: '520px' }}>
+              <thead>
+                <tr style={{ color: theme.textSecondary, fontSize: '10px', letterSpacing: '0.5px', textAlign: 'right' }}>
+                  <th style={{ textAlign: 'left', padding: '5px 6px' }}>PROP</th>
+                  <th style={{ padding: '5px 6px' }}>BEST PRICE</th>
+                  <th style={{ padding: '5px 6px' }} title="Consensus no-vig probability across books">MARKET</th>
+                  <th style={{ padding: '5px 6px' }} title="From season per-PA rates, opposing starter and lineup spot">PROJECTION</th>
+                  <th style={{ padding: '5px 6px' }}>EV (MKT / PROJ)</th>
+                  <th style={{ padding: '5px 6px' }} />
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map(r => (
+                  <tr key={`${r.market}-${r.line}-${r.side}`} style={{ borderTop: `1px solid ${theme.border}`, textAlign: 'right' }}>
+                    <td style={{ textAlign: 'left', padding: '6px', fontWeight: '700' }}>{r.side} {r.line} {r.marketLabel}</td>
+                    <td style={{ padding: '6px' }}>
+                      {fmtOdds(r.best.odds)} <span style={{ fontSize: '10px', color: theme.textSecondary }}>{r.best.bookmaker}</span>
+                    </td>
+                    <td style={{ padding: '6px', color: theme.textSecondary }}>
+                      {r.marketProb === null ? '—' : `${r.marketProb.toFixed(1)}%`}
+                      {r.marketEstimated && <span title="Only 'Over' is offered, so the vig is estimated from each book's other props"> *</span>}
+                    </td>
+                    <td style={{ padding: '6px', color: theme.textSecondary }}>{r.projProb === null ? '—' : `${r.projProb.toFixed(1)}%`}</td>
+                    <td style={{ padding: '6px', fontWeight: '700' }}>
+                      <span style={{ color: r.evMarket > 0 ? '#22c55e' : '#ef4444' }}>{fmtEV(r.evMarket)}</span>
+                      <span style={{ color: theme.textSecondary }}> / </span>
+                      <span style={{ color: r.evProj > 0 ? '#22c55e' : '#ef4444' }}>{fmtEV(r.evProj)}</span>
+                    </td>
+                    <td style={{ padding: '6px', textAlign: 'center' }}>{r.agree ? '💎' : ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ fontSize: '10px', color: theme.textSecondary, marginTop: '6px' }}>
+              💎 = both the market's fair odds and the projection say the best price is +EV.
+              {rows.some(r => r.marketEstimated) && ' * vig estimated (one-sided market).'}
             </div>
           </div>
         )}
@@ -575,6 +684,8 @@ const MLBGamePage = () => {
             </div>
           )}
 
+          {!isPitcher && renderPlayerProps(selected.id)}
+
           <div style={{ fontSize: '16px', fontWeight: '800', color: theme.text, marginBottom: '10px' }}>
             {game && new Date(game.commence_time).getFullYear()} Percentile Rankings
           </div>
@@ -646,11 +757,38 @@ const MLBGamePage = () => {
         {/* Lineups */}
         <h2 style={{ color: theme.text, fontSize: '22px', margin: '30px 0 6px' }}>📋 Lineups</h2>
         <div style={{ fontSize: '12px', color: theme.textSecondary, marginBottom: '14px' }}>
-          Circles are Baseball Savant percentiles (red = great, blue = poor). Click any player for full rankings.
+          Circles are Baseball Savant percentiles (red = great, blue = poor). Click any player for full rankings and today's props.
         </div>
+        {(propEval.highlights.away || propEval.highlights.home || propsError) && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', padding: '10px 14px', marginBottom: '14px',
+            background: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: '12px', fontSize: '13px', color: theme.text
+          }}>
+            <span style={{ fontSize: '12px', fontWeight: '800', color: theme.textSecondary, letterSpacing: '0.5px' }}>🎯 PROP STANDOUTS</span>
+            {propsError && <span style={{ color: theme.textSecondary }}>{propsError}</span>}
+            {['away', 'home'].map(side => {
+              const h = propEval.highlights[side];
+              if (!h) return null;
+              return (
+                <span
+                  key={side}
+                  onClick={() => setSelected({ id: h.playerId, type: 'batter' })}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                >
+                  <img src={getMLBTeamLogo(side === 'away' ? awayTeam : homeTeam)} alt="" style={{ width: '18px', height: '18px' }} />
+                  <strong>{h.name}</strong>
+                  {renderPropPill(h)}
+                </span>
+              );
+            })}
+            <span style={{ fontSize: '11px', color: theme.textSecondary }}>
+              💎 = market odds and stat projection both say +EV · 👀 = best on the team, not confirmed
+            </span>
+          </div>
+        )}
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-          {renderLineup(awayTeam, lineups.away, homePitcher)}
-          {renderLineup(homeTeam, lineups.home, awayPitcher)}
+          {renderLineup(awayTeam, lineups.away, homePitcher, 'away')}
+          {renderLineup(homeTeam, lineups.home, awayPitcher, 'home')}
         </div>
       </div>
 

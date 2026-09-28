@@ -372,6 +372,50 @@ export const getMLBOdds = async (forceRefresh = false) => {
 };
 
 /**
+ * Get MLB batter props (hits, home runs, RBIs) for one game, with caching
+ * Costs 3 API credits per uncached call (one per market)
+ * @param {string} eventId - The event ID
+ * @param {boolean} forceRefresh - Force fresh API call
+ * @returns {object} - { data, cached, timestamp }
+ */
+export const getMLBPlayerProps = async (eventId, forceRefresh = false) => {
+  const cacheKey = `mlb_props_cache_${eventId}`;
+  try {
+    if (!forceRefresh) {
+      const cached = cacheService.get(cacheKey);
+      if (cached) {
+        console.log(`✅ Using cached MLB props for ${eventId} (${cacheService.formatAge(cached.timestamp)})`);
+        return { data: cached.data, cached: true, timestamp: cached.timestamp };
+      }
+    }
+
+    console.log(`🔄 Fetching fresh MLB props for ${eventId}...`);
+    const response = await axios.get(
+      `${BASE_URL}/sports/baseball_mlb/events/${eventId}/odds`,
+      {
+        params: {
+          apiKey: API_KEY,
+          regions: 'us',
+          markets: 'batter_hits,batter_home_runs,batter_rbis',
+          oddsFormat: 'american'
+        }
+      }
+    );
+
+    cacheService.set(cacheKey, response.data);
+    console.log(`✅ MLB props for ${eventId} cached successfully`);
+    return { data: response.data, cached: false, timestamp: Date.now() };
+  } catch (error) {
+    console.error('Error fetching MLB player props:', error);
+    const cached = cacheService.get(cacheKey);
+    if (cached) {
+      return { data: cached.data, cached: true, timestamp: cached.timestamp, stale: true };
+    }
+    throw error;
+  }
+};
+
+/**
  * Clear all cached odds data
  */
 export const clearAllCache = () => {
