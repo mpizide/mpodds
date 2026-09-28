@@ -1,0 +1,15 @@
+{
+  "trained_on_games": 14785,
+  "seasons": "2021-2026",
+  "win_model": "Random Forest",
+  "win_log_loss": 0.6796,
+  "win_baseline_log_loss": 0.6916,
+  "win_accuracy": 0.567,
+  "win_auc": 0.587,
+  "run_diff_model": "Random Forest",
+  "run_diff_mae": 3.435,
+  "run_diff_baseline_mae": 3.533,
+  "totals_model": "Random Forest",
+  "totals_mae": 3.526,
+  "totals_baseline_mae": 3.545
+}

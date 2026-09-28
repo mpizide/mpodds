@@ -324,6 +324,54 @@ export const getCBBOdds = async (forceRefresh = false) => {
 };
 
 /**
+ * Get MLB odds with caching (spreads = run line)
+ * @param {boolean} forceRefresh - Force fresh API call
+ * @returns {object} - { data, cached, timestamp }
+ */
+export const getMLBOdds = async (forceRefresh = false) => {
+  try {
+    const cacheKey = 'odds_cache_mlb';
+
+    // Check cache first unless force refresh
+    if (!forceRefresh) {
+      const cached = cacheService.get(cacheKey);
+      if (cached) {
+        console.log(`✅ Using cached MLB odds (${cacheService.formatAge(cached.timestamp)})`);
+        return { data: cached.data, cached: true, timestamp: cached.timestamp };
+      }
+    }
+
+    // Fetch fresh data from API
+    console.log('🔄 Fetching fresh MLB odds from API...');
+    const response = await axios.get(`${BASE_URL}/sports/baseball_mlb/odds`, {
+      params: {
+        apiKey: API_KEY,
+        regions: 'us',
+        markets: 'h2h,spreads,totals',
+        oddsFormat: 'american'
+      }
+    });
+
+    // Cache the response
+    cacheService.set(cacheKey, response.data);
+    console.log('✅ MLB odds cached successfully');
+
+    return { data: response.data, cached: false, timestamp: Date.now() };
+  } catch (error) {
+    console.error('Error fetching MLB odds:', error);
+
+    // Try to return stale cache as fallback
+    const cached = cacheService.get('odds_cache_mlb');
+    if (cached) {
+      console.warn('⚠️ Using stale MLB cache due to API error');
+      return { data: cached.data, cached: true, timestamp: cached.timestamp, stale: true };
+    }
+
+    throw error;
+  }
+};
+
+/**
  * Clear all cached odds data
  */
 export const clearAllCache = () => {

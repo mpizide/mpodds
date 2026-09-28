@@ -102,6 +102,34 @@ const HomePage = () => {
           </Link>
 
           <Link
+            to="/mlb"
+            style={{
+              textDecoration: 'none',
+              background: theme.cardBg,
+              borderRadius: '20px',
+              padding: '40px',
+              boxShadow: darkMode ? '0 10px 30px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              border: darkMode ? '1px solid #334155' : 'none'
+            }}
+          >
+            <div style={{ fontSize: '64px', textAlign: 'center', marginBottom: '20px' }}>
+              ⚾
+            </div>
+            <h2 style={{
+              fontSize: '32px',
+              color: '#22c55e',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              MLB
+            </h2>
+            <p style={{ fontSize: '16px', color: theme.textSecondary, textAlign: 'center' }}>
+              Model projections, lineups and Statcast percentiles
+            </p>
+          </Link>
+
+          <Link
             to="/cfb"
             style={{
               textDecoration: 'none',

@@ -1,0 +1,44 @@
+{
+  "moneyline": {
+    "method": "market",
+    "model_coef": -0.10724468161897326,
+    "market_coef": 1.0701795215869792,
+    "intercept": -0.0029420727810375224,
+    "evaluation": {
+      "model": {
+        "log_loss": 0.68103,
+        "brier": 0.24403
+      },
+      "market": {
+        "log_loss": 0.67683,
+        "brier": 0.24199
+      },
+      "blend": {
+        "log_loss": 0.67702,
+        "brier": 0.24208
+      }
+    },
+    "games": 9823
+  },
+  "totals": {
+    "method": "market",
+    "model_coef": 0.11578759829765373,
+    "market_coef": 0.918197955405426,
+    "intercept": -0.01610042658726118,
+    "evaluation": {
+      "model": {
+        "log_loss": 0.70038,
+        "brier": 0.25354
+      },
+      "market": {
+        "log_loss": 0.69262,
+        "brier": 0.24974
+      },
+      "blend": {
+        "log_loss": 0.6933,
+        "brier": 0.25007
+      }
+    },
+    "games": 9514
+  }
+}

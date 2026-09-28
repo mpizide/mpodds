@@ -12,9 +12,12 @@
       "Bash(ren:*)",
       "Bash(move ml_predictions_all.json nfl_ml_predictions.json)",
       "Bash(move player_prop_predictions.json nfl_player_prop_predictions.json)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm -v)",
+      "Bash(npx react-scripts *)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": []
   }
 }

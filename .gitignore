@@ -24,3 +24,9 @@ yarn-error.log*
 
 # local secrets (API keys)
 .env
+
+# python bytecode
+__pycache__/
+
+# scraped odds page cache (rebuilt by ml_mlb/mlb_odds_collection.py)
+ml_mlb/data/sbr_cache/

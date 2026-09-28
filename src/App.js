@@ -6,6 +6,8 @@ import NFLPage from './pages/NFLPage';
 import CFBPage from './pages/CFBPage';
 import NBAPage from './pages/NBAPage';
 import CBBPage from './pages/CBBPage';
+import MLBPage from './pages/MLBPage';
+import MLBGamePage from './pages/MLBGamePage';
 import BracketPage from './pages/BracketPage';
 import PlayerPropsPage from './pages/PlayerPropsPage';
 import NBAPlayerPropsPage from './pages/NBAPlayerPropsPage';
@@ -23,6 +25,8 @@ function App() {
           <Route path="/cfb" element={<CFBPage />} />
           <Route path="/nba" element={<NBAPage />} />
           <Route path="/cbb" element={<CBBPage />} />
+          <Route path="/mlb" element={<MLBPage />} />
+          <Route path="/mlb/game/:eventId" element={<MLBGamePage />} />
           <Route path="/nfl/props/:eventId" element={<PlayerPropsPage />} />
           <Route path="/nba/props/:eventId" element={<NBAPlayerPropsPage />} />
           <Route path="/pick-history" element={<PickHistoryPage />} />
